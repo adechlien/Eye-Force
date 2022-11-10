@@ -1,2 +1,0 @@
-Note: in this folder you put all your media resources such as sounds and images.
-If you read processing docs you will understand why. 
