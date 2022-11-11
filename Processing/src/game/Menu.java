@@ -1,29 +1,38 @@
 package game;
 
 import processing.core.PApplet;
+import processing.core.PFont;
 import processing.core.PImage;
 
 public class Menu extends PApplet {
 
-    PImage icono;
-    int circleX = 250, circleY = 50, count = 0;
+    PImage icono, icono2;
+    PFont font;
+
+    int count = 0, x = 0, y = 10, moveX = 10, moveY = 10;
     float move;
-    
+    boolean botonSalir;
+
     @Override
     public void settings() {
-        size(480, 560);
-    }    
+        size(640, 480);
+    }
 
     @Override
     public void setup() {
-        icono = loadImage("/images/spidey.png");
+        icono = loadImage("images/icon.png");
+        icono2 = loadImage("images/icon.png");
         surface.setIcon(icono);
+        font = createFont("Candara-BoldItalic-20.vlw", 18);
+        textFont(font);
     }
 
     @Override
     public void draw() {
         menu();
-
+//        animacion();
+//        String[] fontList = PFont.list();
+//        printArray(fontList);
     }
 
     public void run() {
@@ -34,34 +43,86 @@ public class Menu extends PApplet {
     boolean boton = false;
 
     void menu() {
-        background(204, 227, 222);
-
-        fill(164, 195, 178);
-        ellipse(240, 180, 150, 150);
-
-        fill(60, 110, 113);
+        background(227, 231, 175);
+        // Titulo
+        fill(0, 46, 44);
         textSize(24);
-        text("Nombre", 210, 30, 100, 40);
+        text("Titulo", 290, 25, 80, 40);
+        // fecha y hora
         textSize(18);
+        text(String.valueOf(day()) + "/" + String.valueOf(month()) + "/" + String.valueOf(year()) + " - ", 10, 455, 130, 30);
+        text(String.valueOf(hour()) + ":" + String.valueOf(minute()) + ":" + String.valueOf(second()), 140, 455, 100, 30);
 
-        rect(-1, 320, 120, 40);
-        rect(-1, 380, 120, 40);
-        rect(-1, 440, 120, 40);
-        fill(255);
+        // Icono
+//        ellipse(320, 180, 150, 150);
+        fill(3, 94, 123); // Color        
+        // Botones                
+        // Left Buttons
+        rect(-1, 280, 120, 40, 0, 15, 15, 0);
+        rect(-1, 340, 120, 40, 0, 15, 15, 0);
+        //Right Buttons        
+        rect(520, 280, 120, 40, 15, 0, 0, 15);
+        rect(520, 340, 120, 40, 15, 0, 0, 15);
+        fill(239, 241, 197);
         textSize(20);
-        text("Opcion 1", 15, 325, 100, 40);
-        text("Opcion 3", 15, 385, 100, 40);
-        text("Opcion 5", 15, 445, 100, 40);
-        
-        rect(360, 320, 120, 40);
+        text("Radar", 28, 288, 100, 40);
+        text("Opcion 3", 22, 348, 100, 40);
+        text("Opcion 2", 535, 288, 100, 40);
+        text("Opcion 4", 535, 348, 100, 40);
+        fill(162, 167, 127);
+        // Exit and ... Buttons
+        rect(540, 435, 80, 30, 10, 10, 10, 10);
+        fill(0, 16, 14);
+        textSize(16);
+        text("Salir", 565, 440, 80, 25);
 
-        if ((mouseX > -1) && (mouseX < 119) && (mouseY > 320) && (mouseY < 360) && (mousePressed)) {
+        textSize(20);
+        if ((mouseX > -1) && (mouseX < 119) && (mouseY > 280) && (mouseY < 320)) {
+            cursor(HAND);
+            if (mousePressed) {
+                fill(91, 139, 142);
+                rect(-1, 280, 120, 40, 0, 15, 15, 0);
+                fill(0);
+                text("Radar", 28, 288, 100, 40);
+                boton = true;
+            }
+        } else {
+            cursor(ARROW);
+        }
+
+        if ((mouseX > 520) && (mouseX < 640) && (mouseY > 280) && (mouseY < 320) && (mousePressed)) {
             fill(91, 139, 142);
+            rect(520, 280, 120, 40, 15, 0, 0, 15);
+            fill(0);
+//            text("Opcion 2", 535, 326, 100, 40);
             boton = true;
         }
-        
-        if (boton) {
-            
+
+        // Salir button
+        if ((mouseX > 540) && (mouseX < 620) && (mouseY > 435) && (mouseY < 465) && (mousePressed)) {
+            fill(91, 139, 142);
+            rect(540, 435, 80, 30, 10, 10, 10, 10);
+            fill(255);
+            textSize(16);
+            text("Salir", 565, 440, 80, 25);
+//            exit();
+        }
+
+        if (botonSalir) {
+
+        }
+    }
+
+    void animacion() {
+        fill(228, 245, 255);
+        rect(x, y, moveX, moveY);
+        moveX += 4;
+        if (moveX >= 610) {
+            x += 4;
+        }
+        if (x >= 610) {
+            x -= 4;
+            moveY += 4;
         }
     }
 

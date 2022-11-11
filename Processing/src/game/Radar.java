@@ -16,12 +16,12 @@ public class Radar extends PApplet {
 
     @Override
     public void settings() {
-        size(500, 500);
+        size(720, 500);
     }
 
     @Override
     public void setup() {
-        icono = loadImage("/images/spidey.png");
+        icono = loadImage("images/icon.png");
         surface.setIcon(icono);
         count = 0;
     }
@@ -70,22 +70,22 @@ public class Radar extends PApplet {
         line(128, 372, 140, 360); // 3.1
         line(372, 372, 360, 360); // 4.1              
 
-        strokeWeight(1);
-        fill(190, 231, 209);
-        textSize(20);
-        text("Radar", 30, 480);
-
+//        strokeWeight(1);
+//        fill(190, 231, 209);
+//        textSize(20);
+//        text("Radar", 40, 80);
         strokeWeight(1);
         fill(240, 155, 140);
         rect(422, 450, 40, 30);
         fill(190, 231, 209);
         rect(380, 450, 40, 30);
         strokeWeight(3);
+        noFill();
         if (on) {
-            fill(0, 255, 0);
+            stroke(30, 255, 30);
             line(380, 485, 420, 485);
         } else {
-            fill(255, 0, 0);
+            stroke(255, 30, 20);
             line(422, 485, 462, 485);
         }
         fill(0);
@@ -101,8 +101,19 @@ public class Radar extends PApplet {
                 add = 0;
             }
         }
+        strokeWeight(2);
+        stroke(0);
+        fill(227, 231, 175);
+        textSize(20);
+        text("Registro", 565, 30, 100, 50);
+        rect(520, 60, 170, 400);
+        for (int i = 100; i <= 430; i += 40) {
+            strokeWeight(1);
+            line(520, i, 690, i);
+        }
         // Aquí abajo dice qué hace
         lineasGiratorias(add);
+
     }
 
     public void run() {
@@ -117,16 +128,19 @@ public class Radar extends PApplet {
         translate(250, 250);
         rotate(move);
         strokeWeight(5);
-        int alpha = 255, moveY[] = {-189, -190, -189, -189, -188, -187, -185, -184,
-            -182, -180, -178, -176, -173, -170, -168, -165, -162, -159}, k = 0;
-//        for (int i = 0; i > -70; i -= 5) {
-//            stroke(240, 40, 40, alpha);
-//            line(0, 0, i, moveY[k]);
-//            alpha -= 15;
-//            k++;
-//        }
-        stroke(240, 40, 40);
-        line(0, 0, 0, -189);
+        int alpha = 255, moveY[] = {-185, -185, -185, -185, -184, -183, -183, -182,
+            -181, -180, -178, -176, -174, -172}, k = 0;
+        if (add == 1) {
+            for (int i = 0; i > -70; i -= 5) {
+                stroke(240, 40, 40, alpha);
+                line(0, 0, i, moveY[k] + 10);
+                alpha -= 15;
+                k++;
+            }
+        } else {
+            stroke(240, 40, 40);
+            line(0, 0, 0, -189);
+        }
     }
 
     void interruptor() {
