@@ -12,7 +12,7 @@ public class Menu extends PApplet {
     PImage icon, photo, moonIcon, sunIcon;
     String language = "ES", disposeText, op1 = "Radar", op2, op3, op4, backText, hisText, lgText, useText;
     int add, hora = hour(), minuto = minute(), count = 0, x = 0, y = 10, moveX = 10, moveY = 10;
-    int disposeX, backX, hisX, lgX, op4X, useX, tab = 0;
+    int disposeX, backX, hisX, lgX, op4X, useX, tab = 0, z = 400;
     boolean on = false, menu = true, lgBoard = false, darkMode = false;
     float move;
 
@@ -240,7 +240,7 @@ public class Menu extends PApplet {
         // Exit Button
         if ((mouseX > 620) && (mouseX < 720) && (mouseY > 455) && (mouseY < 485)) {
             cursor(HAND);
-            if (mousePressed) {                
+            if (mousePressed) {
                 exit();
             }
         }
@@ -275,6 +275,7 @@ public class Menu extends PApplet {
         }
         if (lgBoard) {
             fill(255, 203, 47);
+//            fill(0);
             rect(30, 65, 100, 200, 5, 10, 5, 15);
             strokeWeight(3);
             // UK Flag
@@ -329,7 +330,7 @@ public class Menu extends PApplet {
             rect(63, 157, 34, 27);
             // Red
             fill(239, 35, 60);
-            rect(97, 157, 33, 27);
+            rect(97, 157, 33, 27, 0, 10, 10, 0);
             // Germany Flag
             // Black
             fill(31);
@@ -347,9 +348,26 @@ public class Menu extends PApplet {
             // Red
             fill(242, 27, 63);
             rect(73, 217, 57, 27);
-
+            // Japan                        
+            // White
+//            fill(255);
+//            rect(131, 217, 100, 27);
+//            strokeWeight(0); 
+//            // Red circle
+//            fill(230, 0, 0);
+//            ellipse(180, 231, 18, 18);
+            // Corea
+            // White
+            // Circle
+            // Black
+            // China
+            // Red
+            // Yellow
+            // Ay dios
+            // Border
             noFill();
             stroke(3);
+            strokeWeight(3);
             rect(30, 30, 100, 30, 10, 5, 10, 5);
             strokeWeight(3);
             for (int i = 95; i < 260; i += 30) {
@@ -383,6 +401,20 @@ public class Menu extends PApplet {
     }
 
     void animation() {
+        // prueba
+//        fill(0);
+//        ellipse(320, z, 30, 30);
+//        if (z == 400) {
+//            do {
+//                z++;
+//            } while (z < 440);
+//        }
+//        if (z == 440) {
+//            do {
+//                z--;
+//            } while (z > 400);
+//        }
+        //
         stroke(0);
         strokeWeight(4);
         fill(229, 229, 229);
@@ -399,10 +431,25 @@ public class Menu extends PApplet {
 //        line(440, 115, 440, 105);
 //        line(470, 120, 480, 110);
         // Re-drawing
-        e1.update(mouseX, mouseY);
-        e1.display();
-        e2.update(mouseX, mouseY);
-        e2.display();
+        if (darkMode) {
+            e1.update(mouseX, mouseY);
+            e1.display();
+            e2.update(mouseX, mouseY);
+            e2.display();
+        } else {
+            fill(150);
+            ellipse(295, 150, 80, 80);
+            ellipse(425, 150, 80, 80);
+            strokeWeight(2);
+            arc(295, 150, 60, 60, QUARTER_PI, PI);
+            arc(425, 150, 60, 60, 0, PI - QUARTER_PI);
+            // Zzz
+//            textSize(24);
+//            fill(50, 63, 121);
+//            text("Z", 512, 100);
+//            text("z", 530, 90);
+//            text("z", 545, 80);
+        }
         image(photo, 210, 0);
     }
 
@@ -525,10 +572,10 @@ public class Menu extends PApplet {
         strokeWeight(3);
         stroke(0);
         if (darkMode) {
-                    fill(229);
-                } else {
-                    fill(50, 63, 121);
-                }
+            fill(229);
+        } else {
+            fill(50, 63, 121);
+        }
         textSize(20);
         // Title
         switch (hisText) {
@@ -650,4 +697,5 @@ public class Menu extends PApplet {
             cursor(ARROW);
         }
     }
+    
 }
