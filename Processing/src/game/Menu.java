@@ -1,7 +1,7 @@
 package game;
 
-import processing.core.PApplet;
 import static processing.core.PApplet.atan2;
+import processing.core.PApplet;
 import processing.core.PFont;
 import processing.core.PImage;
 
@@ -9,11 +9,12 @@ public class Menu extends PApplet {
 
     Eye e1, e2;
     PFont font;
-    PImage icon, photo, moonIcon, sunIcon;
-    String language = "ES", disposeText, op1 = "Radar", op2, op3, op4, backText, hisText, lgText, useText;
-    int add, hora = hour(), minuto = minute(), count = 0, x = 0, y = 10, moveX = 10, moveY = 10;
-    int disposeX, backX, hisX, lgX, op4X, useX, tab = 0, z = 400;
-    boolean on = false, menu = true, lgBoard = false, darkMode = false;
+    PImage icon, photo, moonIcon, sunIcon, pShield;
+    String language = "ES", op1 = "Radar", op2, op3, op4;
+    String disposeText, backText, hisText, lgText, useText;
+    int hora = hour(), minuto = minute(), count = 0, x = 0, y = 10;
+    int add, disposeX, backX, hisX, lgX, op4X, useX, tab = 0;
+    boolean on = false, lgBoard = false, darkMode = false;
     float move;
 
     @Override
@@ -30,6 +31,7 @@ public class Menu extends PApplet {
         photo = loadImage("images/owl.png");
         moonIcon = loadImage("images/moon.png");
         sunIcon = loadImage("images/sun.png");
+        pShield = loadImage("images/pShield.png");
         surface.setIcon(icon);
         textFont(font);
     }
@@ -37,7 +39,7 @@ public class Menu extends PApplet {
     @Override
     public void draw() {
         switch (language) {
-            case "EN" -> {
+            case "EN":
                 lgText = "Language";
                 disposeText = "Exit";
                 op2 = "Option";
@@ -46,8 +48,8 @@ public class Menu extends PApplet {
                 backText = "Back";
                 hisText = "History";
                 useText = "How to use";
-            }
-            case "ES" -> {
+                break;
+            case "ES":
                 lgText = "Idioma";
                 disposeText = "Salir";
                 op2 = "Opción";
@@ -56,8 +58,8 @@ public class Menu extends PApplet {
                 backText = "Atrás";
                 hisText = "Historial";
                 useText = "Cómo usar";
-            }
-            case "IT" -> {
+                break;
+            case "IT":
                 lgText = "Lingua";
                 disposeText = "Uscita";
                 op2 = "Opzione";
@@ -66,8 +68,8 @@ public class Menu extends PApplet {
                 backText = "Indietro";
                 hisText = "Storia";
                 useText = "Modalità d'uso";
-            }
-            case "FR" -> {
+                break;
+            case "FR":
                 lgText = "Langue";
                 disposeText = "Sortie";
                 op2 = "Option";
@@ -76,8 +78,8 @@ public class Menu extends PApplet {
                 backText = "Revenir";
                 hisText = "Histoire";
                 useText = "Mode d’emploi";
-            }
-            case "DE" -> {
+                break;
+            case "DE":
                 lgText = "Sprache";
                 disposeText = "Verlassen";
                 op2 = "Option";
@@ -86,8 +88,8 @@ public class Menu extends PApplet {
                 backText = "Zurück";
                 hisText = "Bewegungsprofil";
                 useText = "Gebrauchsanleitung";
-            }
-            case "PR" -> {
+                break;
+            case "PR":
                 lgText = "Idioma";
                 disposeText = "Saída";
                 op2 = "Opção";
@@ -96,20 +98,20 @@ public class Menu extends PApplet {
                 backText = "Voltar";
                 hisText = "História";
                 useText = "Como usar";
-            }
+                break;
         }
         switch (tab) {
-            case 0 -> {
+            case 0:
                 if (darkMode) {
                     background(50, 63, 121);
                 } else {
                     background(230, 230, 250);
                 }
-                options(disposeText, op1, op2, op3, op4);
+                mainMenu(disposeText, op1, op2, op3, op4);
                 languageSelection();
                 animation();
-            }
-            case 1 -> {
+                break;
+            case 1:
                 if (darkMode) {
                     background(45, 58, 106);
                 } else {
@@ -119,15 +121,15 @@ public class Menu extends PApplet {
                 radarSwitch();
                 historyTable(hisText);
                 turningLines(add);
-            }
-            case 2 -> {
+                break;
+            case 2:
                 if (darkMode) {
                     background(50, 63, 121);
                 } else {
                     background(230, 230, 250);
                 }
-                pageOne(backText);
-            }
+                infoPage(backText);
+                break;
         }
     }
 
@@ -137,7 +139,7 @@ public class Menu extends PApplet {
     }
 
     // Menu Tab
-    void options(String disposeText, String op1, String op2, String op3, String op4) {
+    void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
         // Title
         textSize(26);
         if (darkMode) {
@@ -170,14 +172,19 @@ public class Menu extends PApplet {
         text(op3, 626, 293, 90, 40);
         text(op2, 24, 353, 90, 40);
         switch (op4) {
-            case "Anweisungen" ->
+            case "Anweisungen":
                 op4X = 580;
-            case "Instrucciones" ->
+                break;
+            case "Instrucciones":
                 op4X = 582;
-            case "Instructions" ->
+                break;
+            case "Instructions":
                 op4X = 585;
-            case "Istruzioni", "Instruções" ->
+                break;
+            case "Istruzioni":
+            case "Instruções":
                 op4X = 595;
+                break;
         }
         text(op4, op4X, 353, 140, 40);
         // Exit Button
@@ -186,14 +193,20 @@ public class Menu extends PApplet {
         textSize(15);
         fill(0);
         switch (disposeText) {
-            case "Verlassen" ->
+            case "Verlassen":
                 disposeX = 628;
-            case "Uscita" ->
+                break;
+            case "Uscita":
                 disposeX = 640;
-            case "Sortie", "Saída" ->
+                break;
+            case "Sortie":
+            case "Saída":
                 disposeX = 642;
-            case "Salir", "Exit" ->
+                break;
+            case "Salir":
+            case "Exit":
                 disposeX = 645;
+                break;
         }
         text(disposeText, disposeX, 465, 80, 25);
         // Dark and Light Modes
@@ -227,9 +240,9 @@ public class Menu extends PApplet {
             cursor(ARROW);
         }
         // Option 2
-        if ((mouseX > 600) && (mouseX < 720) && (mouseY > 280) && (mouseY < 320) && (mousePressed)) {
-
-        }
+//        if ((mouseX > 600) && (mouseX < 720) && (mouseY > 280) && (mouseY < 320) && (mousePressed)) {
+//
+//        }
         // Option 4
         if ((mouseX > 560) && (mouseX < 720) && (mouseY > 340) && (mouseY < 380)) {
             cursor(HAND);
@@ -254,34 +267,35 @@ public class Menu extends PApplet {
         textSize(16);
         fill(0);
         switch (lgText) {
-            case "Language" ->
+            case "Language":
                 lgX = 45;
-            case "Sprache" ->
+                break;
+            case "Sprache":
                 lgX = 53;
-            case "Idioma", "Lingua", "Langue" ->
+                break;
+            case "Idioma":
+            case "Lingua":
+            case "Langue":
                 lgX = 55;
+                break;
         }
         text(lgText, lgX, 40, 100, 20);
-        // Function 30, 30, 100, 30
-        if ((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 60)) {
-            cursor(HAND);
-            if (mousePressed) {
-                lgBoard = true;
-            }
+        // Function
+        if ((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 60) && (mousePressed)) {
+            lgBoard = true;
         } else {
-            if (!((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 265))) {
+            if (!((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 245))) {
                 lgBoard = false;
             }
         }
         if (lgBoard) {
-            fill(255, 203, 47);
-//            fill(0);
-            rect(30, 65, 100, 200, 5, 10, 5, 15);
+            fill(0);
+            rect(30, 65, 100, 180, 5, 10, 10, 10);
             strokeWeight(3);
             // UK Flag
             // Blue
             fill(69, 123, 157);
-            rect(30, 65, 100, 30, 5, 10, 0, 0);
+            rect(30, 65, 100, 30, 10, 10, 10, 10);
             // White
             strokeWeight(0);
             fill(241, 250, 238);
@@ -289,8 +303,8 @@ public class Menu extends PApplet {
             rect(32, 75, 97, 10);
             stroke(241, 250, 238);
             strokeWeight(5);
-            line(34, 69, 126, 91);
-            line(34, 91, 126, 69);
+            line(35, 70, 125, 90);
+            line(35, 90, 125, 70);
             // Red
             strokeWeight(0);
             fill(230, 57, 70);
@@ -298,33 +312,33 @@ public class Menu extends PApplet {
             rect(32, 78, 97, 4);
             stroke(230, 57, 70);
             strokeWeight(2);
-            line(32, 68, 128, 92);
-            line(32, 92, 128, 68);
+            line(33, 69, 127, 91);
+            line(33, 91, 127, 69);
             // Spain Flag
             // Red
             stroke(0);
             strokeWeight(2);
             fill(199, 3, 24);
-            rect(30, 95, 100, 30);
+            rect(30, 95, 100, 30, 10, 10, 10, 10);
             // Yellow
             strokeWeight(0);
             fill(252, 223, 0);
             rect(32, 104, 97, 13);
             // La bandiera di Italia
             // Green
-            stroke(0);
+            stroke(4);
             fill(106, 153, 78);
-            rect(31, 127, 33, 27);
+            rect(31, 127, 33, 27, 10, 0, 0, 10);
             // White
             fill(242, 232, 207);
             rect(63, 127, 34, 27);
             // Red
             fill(239, 35, 60);
-            rect(97, 127, 33, 27);
+            rect(97, 127, 33, 27, 0, 10, 10, 0);
             // France Flag
             // Blue
             fill(0, 60, 136);
-            rect(31, 157, 33, 27);
+            rect(31, 157, 33, 27, 10, 0, 0, 10);
             // White
             fill(242, 232, 207);
             rect(63, 157, 34, 27);
@@ -333,64 +347,74 @@ public class Menu extends PApplet {
             rect(97, 157, 33, 27, 0, 10, 10, 0);
             // Germany Flag
             // Black
-            fill(31);
-            rect(31, 187, 99, 9);
+            fill(25);
+            rect(31, 187, 99, 9, 15, 15, 0, 0);
             // Red
             fill(208, 0, 0);
             rect(31, 196, 99, 9);
             // Yellow
             fill(255, 186, 8);
-            rect(31, 205, 99, 9);
+            rect(31, 205, 99, 9, 0, 0, 15, 15);
             // Portugal Flag
             // Green
-            fill(31, 171, 18);
-            rect(31, 217, 42, 27);
+            fill(41, 171, 28);
+            rect(31, 217, 42, 27, 10, 0, 0, 10);
             // Red
             fill(242, 27, 63);
-            rect(73, 217, 57, 27);
-            // Japan                        
-            // White
-//            fill(255);
-//            rect(131, 217, 100, 27);
-//            strokeWeight(0); 
-//            // Red circle
-//            fill(230, 0, 0);
-//            ellipse(180, 231, 18, 18);
-            // Corea
-            // White
-            // Circle
-            // Black
-            // China
-            // Red
-            // Yellow
-            // Ay dios
+            rect(73, 217, 57, 27, 0, 10, 10, 0);
+            // Shield
+            image(pShield, 62, 220);
             // Border
             noFill();
             stroke(3);
             strokeWeight(3);
             rect(30, 30, 100, 30, 10, 5, 10, 5);
             strokeWeight(3);
-            for (int i = 95; i < 260; i += 30) {
+            for (int i = 95; i < 240; i += 30) {
                 fill(0);
                 line(30, i, 130, i);
             }
-            if ((mouseX > 30) && (mouseX < 130) && (mouseY > 65) && (mouseY < 95) && (mousePressed)) {
-                language = "EN";
+            if (darkMode) {
+                fill(229);
             } else {
-                if ((mouseX > 30) && (mouseX < 130) && (mouseY > 95) && (mouseY < 125) && (mousePressed)) {
-                    language = "ES";
+                fill(50, 63, 121);
+            }
+            if ((mouseX > 30) && (mouseX < 130) && (mouseY > 65) && (mouseY < 95)) {
+                textSize(16);
+                text("English", 140, 85);
+                if (mousePressed) {
+                    language = "EN";
+                }
+            } else {
+                if ((mouseX > 30) && (mouseX < 130) && (mouseY > 95) && (mouseY < 125)) {
+                    text("Español", 140, 115);
+                    if (mousePressed) {
+                        language = "ES";
+                    }
                 } else {
-                    if ((mouseX > 30) && (mouseX < 130) && (mouseY > 125) && (mouseY < 155) && (mousePressed)) {
-                        language = "IT";
+                    if ((mouseX > 30) && (mouseX < 130) && (mouseY > 125) && (mouseY < 155)) {
+                        text("Italiano", 140, 145);
+                        if (mousePressed) {
+                            language = "IT";
+                        }
                     } else {
-                        if ((mouseX > 30) && (mouseX < 130) && (mouseY > 155) && (mouseY < 185) && (mousePressed)) {
-                            language = "FR";
+                        if ((mouseX > 30) && (mouseX < 130) && (mouseY > 155) && (mouseY < 185)) {
+                            text("Français", 140, 175);
+                            if (mousePressed) {
+                                language = "FR";
+                            }
                         } else {
-                            if ((mouseX > 30) && (mouseX < 130) && (mouseY > 185) && (mouseY < 215) && (mousePressed)) {
-                                language = "DE";
+                            if ((mouseX > 30) && (mouseX < 130) && (mouseY > 185) && (mouseY < 215)) {
+                                text("Deutsch", 140, 205);
+                                if (mousePressed) {
+                                    language = "DE";
+                                }
                             } else {
-                                if ((mouseX > 30) && (mouseX < 130) && (mouseY > 215) && (mouseY < 265) && (mousePressed)) {
-                                    language = "PR";
+                                if ((mouseX > 30) && (mouseX < 130) && (mouseY > 215) && (mouseY < 265)) {
+                                    text("Português", 140, 235);
+                                    if (mousePressed) {
+                                        language = "PR";
+                                    }
                                 }
                             }
                         }
@@ -401,35 +425,9 @@ public class Menu extends PApplet {
     }
 
     void animation() {
-        // prueba
-//        fill(0);
-//        ellipse(320, z, 30, 30);
-//        if (z == 400) {
-//            do {
-//                z++;
-//            } while (z < 440);
-//        }
-//        if (z == 440) {
-//            do {
-//                z--;
-//            } while (z > 400);
-//        }
-        //
         stroke(0);
         strokeWeight(4);
         fill(229, 229, 229);
-//        // Left Eye        
-//        arc(270, 247, 220, 260, PI + QUARTER_PI, TAU - QUARTER_PI, OPEN);
-//        arc(270, 63, 220, 260, QUARTER_PI, HALF_PI + QUARTER_PI, OPEN);
-//        line(240, 120, 230, 110);
-//        line(270, 115, 270, 105);
-//        line(300, 120, 310, 110);
-//        // Right Eye        
-//        arc(440, 247, 220, 260, PI + QUARTER_PI, TAU - QUARTER_PI, OPEN);
-//        arc(440, 63, 220, 260, QUARTER_PI, HALF_PI + QUARTER_PI, OPEN);
-//        line(410, 120, 400, 110);
-//        line(440, 115, 440, 105);
-//        line(470, 120, 480, 110);
         // Re-drawing
         if (darkMode) {
             e1.update(mouseX, mouseY);
@@ -443,12 +441,6 @@ public class Menu extends PApplet {
             strokeWeight(2);
             arc(295, 150, 60, 60, QUARTER_PI, PI);
             arc(425, 150, 60, 60, 0, PI - QUARTER_PI);
-            // Zzz
-//            textSize(24);
-//            fill(50, 63, 121);
-//            text("Z", 512, 100);
-//            text("z", 530, 90);
-//            text("z", 545, 80);
         }
         image(photo, 210, 0);
     }
@@ -459,18 +451,26 @@ public class Menu extends PApplet {
         stroke(0);
         strokeWeight(3);
         fill(255, 203, 47);
-        rect(20, 20, 85, 30, 10, 10, 10, 10);
+        rect(20, 20, 85, 30, 10, 5, 10, 5);
         fill(0);
         textSize(16);
         switch (backText) {
-            case "Indietro", "Revenir" ->
+            case "Indietro":
+            case "Revenir":
                 backX = 34;
-            case "Zurück" ->
+                break;
+            case "Zurück":
                 backX = 38;
-            case "Voltar" ->
+                break;
+            case "Voltar":
                 backX = 40;
-            case "Atrás", "Back" ->
+                break;
+            case "Atrás":
                 backX = 42;
+                break;
+            case "Back":
+                backX = 44;
+                break;
         }
         text(backText, backX, 30, 70, 20);
         // Radar
@@ -503,14 +503,27 @@ public class Menu extends PApplet {
         ellipse(250, 250, 350, 350);
         line(240, 250, 260, 250);
         line(250, 240, 250, 260);
-        line(75, 250, 100, 250); // 1
-        line(425, 250, 400, 250); // 2
-        line(250, 75, 250, 100); // 3
-        line(250, 425, 250, 400); // 4
-        line(128, 128, 140, 140); // 1.1
-        line(372, 128, 360, 140); // 2.1
-        line(128, 372, 140, 360); // 3.1
-        line(372, 372, 360, 360); // 4.1
+        line(75, 250, 100, 250);
+        line(425, 250, 400, 250);
+        line(250, 75, 250, 100);
+        line(250, 425, 250, 400);
+        line(128, 128, 140, 140);
+        line(372, 128, 360, 140);
+        line(128, 372, 140, 360);
+        line(372, 372, 360, 360);
+        // Distance
+        strokeWeight(1);
+        if (darkMode) {
+            fill(190, 231, 209);
+        } else {
+            fill(46, 125, 85);
+        }
+        textSize(15);
+//        text("2", 280, 248);
+        text("10", 314, 246);
+        text("20", 354, 246);
+        text("30", 392, 246);
+        text("40", 430, 246);
         // Changes
         if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
             cursor(HAND);
@@ -524,29 +537,22 @@ public class Menu extends PApplet {
 
     void radarSwitch() {
         // Buttons
-        strokeWeight(2);
+        strokeWeight(3);
         stroke(0);
         // Red/Off
-        fill(240, 155, 140);
+        fill(255, 155, 140);
         rect(422, 450, 40, 30, 0, 10, 10, 0);
         // Green/On
-        fill(190, 231, 209);
+        fill(160, 255, 179);
         rect(380, 450, 40, 30, 10, 0, 0, 10);
         // Underline
         strokeWeight(3);
         noFill();
-        if (on) {
-            stroke(30, 255, 30);
-            line(390, 485, 420, 485);
-        } else {
-            stroke(255, 30, 20);
-            line(422, 485, 452, 485);
-        }
         // Texts
         fill(0);
         textSize(14);
-        text("On", 390, 470);
-        text("Off", 430, 470);
+        text("On", 391, 470);
+        text("Off", 431, 470);
         // Function
         if ((mouseX > 380) && (mouseX < 420) && (mouseY > 450) && (mouseY < 480)) {
             cursor(HAND);
@@ -567,8 +573,7 @@ public class Menu extends PApplet {
         }
     }
 
-    void historyTable(String hisText) {
-        // Tira la palanca y endereza... que la Guagua va en reversa
+    void historyTable(String hisText) {        
         strokeWeight(3);
         stroke(0);
         if (darkMode) {
@@ -579,12 +584,18 @@ public class Menu extends PApplet {
         textSize(20);
         // Title
         switch (hisText) {
-            case "Bewegungsprofil" ->
+            case "Bewegungsprofil":
                 hisX = 528;
-            case "History", "Historial", "Histoire", "História" ->
+                break;
+            case "History":
+            case "Historial":
+            case "Histoire":
+            case "História":
                 hisX = 570;
-            case "Storia" ->
+                break;
+            case "Storia":
                 hisX = 580;
+                break;
         }
         text(hisText, hisX, 35, 160, 50);
         // Table
@@ -600,7 +611,7 @@ public class Menu extends PApplet {
     }
 
     void turningLines(int add) {
-        delay(50);
+        delay(40);
         count = count + add;
         move = count * (2 * PI) / 60;
         translate(250, 250);
@@ -622,8 +633,8 @@ public class Menu extends PApplet {
         stroke(0);
     }
 
+    // Code taken from "Mouse Arc Tangent", a Processing starting project.
     class Eye {
-
         int x, y;
         int size;
         float angle = (float) 0.0;
@@ -651,7 +662,7 @@ public class Menu extends PApplet {
     }
 
     // Info Tab
-    void pageOne(String backText) {
+    void infoPage(String backText) {
         if (darkMode) {
             fill(229);
         } else {
@@ -660,12 +671,18 @@ public class Menu extends PApplet {
         // Title
         textSize(25);
         switch (useText) {
-            case "Cómo usar", "How to use", "Como usar" ->
+            case "Cómo usar":
+            case "How to use":
+            case "Como usar":
                 useX = 300;
-            case "Modalità d'uso", "Mode d’emploi" ->
+                break;
+            case "Modalità d'uso":
+            case "Mode d’emploi":
                 useX = 280;
-            case "Gebrauchsanleitung" ->
+                break;
+            case "Gebrauchsanleitung":
                 useX = 260;
+                break;
         }
         text(useText, useX, 15, 240, 40);
         rect(20, 40, 680, 440, 5, 10, 5, 10);
@@ -677,16 +694,30 @@ public class Menu extends PApplet {
         fill(0);
         textSize(16);
         switch (backText) {
-            case "Indietro", "Revenir" ->
+            case "Indietro":
+            case "Revenir":
                 backX = 34;
-            case "Zurück" ->
+                break;
+            case "Zurück":
                 backX = 38;
-            case "Voltar" ->
+                break;
+            case "Voltar":
                 backX = 40;
-            case "Atrás", "Back" ->
+                break;
+            case "Atrás":
+            case "Back":
                 backX = 42;
+                break;
         }
         text(backText, backX, 460, 70, 20);
+        // Explanation
+        if (darkMode) {
+            fill(50, 63, 121);
+        } else {
+            fill(229);
+        }
+        textSize(22);
+        text("To start the radar, click on Radar Button", 40, 80);
         // Changes
         if ((mouseX > 20) && (mouseX < 105) && (mouseY > 450) && (mouseY < 480)) {
             cursor(HAND);
@@ -697,5 +728,5 @@ public class Menu extends PApplet {
             cursor(ARROW);
         }
     }
-    
+
 }
