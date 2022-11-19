@@ -22,7 +22,7 @@ PImage icon, photo, moonIcon, sunIcon;
 String language = "ES", op1, op2, op3 = "Radar", op4;
 String disposeText, backText, hisText, lgText, useText;
 int hora = hour(), minuto = minute(), count = 0, x = 0, y = 10;
-int add, disposeX, backX, hisX, lgX, op4X, useX, tab = 0;
+int add, disposeX, backX, hisX, lgX, op1X, op4X, useX, tab = 0;
 boolean on = false, lgBoard = false, darkMode = false;
 float move;  
 
@@ -38,8 +38,8 @@ void setup(){
   surface.setIcon(icon); 
   textFont(font);
   smooth();
-  myPort = new Serial(this,"COM3", 9600); // starts the serial communication
-  myPort.bufferUntil('.');
+  //myPort = new Serial(this,"COM3", 9600); // starts the serial communication
+  //myPort.bufferUntil('.');
 } 
 
 void draw() {
@@ -71,7 +71,8 @@ void draw() {
           background(50, 63, 121);
         } else {
           background(230, 230, 250);
-        }        
+        }
+        miniRadar();
         mainMenu(disposeText, op1, op2, op3, op4);
         languageSelection();
         animation();
@@ -81,13 +82,17 @@ void draw() {
           background(50, 63, 121);
         } else {
           background(230, 230, 250);
-        }
+        }        
         radarMenu(backText);
         historyTable(hisText);
         break;
       case 2: // ventana de radar
         noStroke();
-        fill(50, 63, 121, 9); 
+        fill(57, 70, 121);
+        rect(0, 0, 140, 70);
+        rect(590, 0, 130, 90);
+        rect(0, 465, width, 500);
+        fill(50, 63, 121, 20);         
         rect(0, 0, width, height); 
         fill(46, 125, 85);
         drawRadar();
@@ -122,21 +127,29 @@ void drawRadar() { // semicirculos y lineas estaticas
   pushMatrix();
   translate(width/2,height-height*0.074); // moves the starting coordinats to new location
   noFill();
-  strokeWeight(2);
+  strokeWeight(1);
   stroke(190, 231, 209);
-  // draws the arc lines
-  arc(0,0,(width-width*0.0625),(width-width*0.0625),PI,TWO_PI);
+  // draws the arc lines  
   arc(0,0,(width-width*0.27),(width-width*0.27),PI,TWO_PI);
   arc(0,0,(width-width*0.479),(width-width*0.479),PI,TWO_PI);
   arc(0,0,(width-width*0.687),(width-width*0.687),PI,TWO_PI);
   // draws the angle lines
-  line(-width/2,0,width/2,0);
-  line(0,0,(-width/2)*cos(radians(30)),(-width/2)*sin(radians(30)));
-  line(0,0,(-width/2)*cos(radians(60)),(-width/2)*sin(radians(60)));
-  line(0,0,(-width/2)*cos(radians(90)),(-width/2)*sin(radians(90)));
-  line(0,0,(-width/2)*cos(radians(120)),(-width/2)*sin(radians(120)));
-  line(0,0,(-width/2)*cos(radians(150)),(-width/2)*sin(radians(150)));
+  line(-120, -120, -150, -150);
+  line(120, -120, 150, -150);
+  //line(0,0,(-width/2 + 20)*cos(radians(30)),(-width/2 + 25)*sin(radians(30)));
+  //line(0,0,(-width/2)*cos(radians(60)),(-width/2 + 28)*sin(radians(60)));
+  line(0,0,(-width/2)*cos(radians(90)),(-width/2 + 22)*sin(radians(90)));
+  //line(0,0,(-width/2)*cos(radians(120)),(-width/2 + 28)*sin(radians(120)));
+  //line(0,0,(-width/2 + 20)*cos(radians(150)),(-width/2 + 25)*sin(radians(150)));
   //line((-width/2)*cos(radians(30)),0,width/2,0);
+  strokeWeight(5);
+  arc(0,0,(width-width*0.0625),(width-width*0.0625),PI,TWO_PI);
+  line(0, (-width/2 + 22)*sin(radians(90)), 0,(-width/2 + 60)*sin(radians(90)));
+  line(-width/2 + 22, 0, width/2 - 22, 0);
+  line(-218, -218, -238, -238);
+  line(218, -218, 238, -238);
+  line(0, 0, 0, -20);
+  line(-20, 0, 20, 0);
   popMatrix();
 }
 void drawObject() { // linea dinamica roja
@@ -191,9 +204,17 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
     fill(229);
   }
   // Texts
-  text(op1, 48, 293, 100, 40);
+  switch (op1) {
+    case "Historial":
+      op1X = 38;
+      break;
+    case "History":
+      op1X = 42;
+      break;
+  }
+  text(op1, op1X, 293, 100, 40);
   text(op3, 626, 293, 90, 40);
-  text(op2, 24, 353, 90, 40);
+  text(op2, 32, 353, 90, 40);
   switch (op4) {
     case "Instrucciones":
       op4X = 582;
@@ -239,8 +260,8 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   } else {
     cursor(ARROW);
   }
-  // Option 2 600, 280, 120, 40
-  if ((mouseX > 600) && (mouseX < 720) && (mouseY > 280) && (mouseY < 320)) {
+  // Option 2
+  if ((mouseX > 600) && (mouseX < width) && (mouseY > 280) && (mouseY < 320)) {
     cursor(HAND);
     if (mousePressed) {
       tab = 2;
@@ -249,161 +270,190 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
     cursor(ARROW);
   }
   // Option 4
-  if ((mouseX > 560) && (mouseX < 720) && (mouseY > 340) && (mouseY < 380)) {
-   cursor(HAND);
-   if (mousePressed) {
-     tab = 3;
-   }
- }
- // Exit Button
- if ((mouseX > 620) && (mouseX < 720) && (mouseY > 455) && (mouseY < 485)) {
-            cursor(HAND);
-            if (mousePressed) {
-                exit();
-            }
-        }
+  if ((mouseX > 560) && (mouseX < width) && (mouseY > 340) && (mouseY < 380)) {
+    cursor(HAND);
+    if (mousePressed) {
+      tab = 3;
     }
+  }
+  // Exit Button
+  if ((mouseX > 620) && (mouseX < width) && (mouseY > 455) && (mouseY < 485)) {
+    cursor(HAND);
+    if (mousePressed) {
+      exit();
+    }
+  }
+}
 
 void languageSelection() {
-        // Board
-        strokeWeight(3);
-        fill(255, 203, 47);
-        rect(30, 30, 100, 30, 10, 5, 10, 5);
-        textSize(16);
-        fill(0);
-        switch (lgText) {
-            case "Language":
-                lgX = 45;
-                break;
-            case "Idioma":
-                lgX = 55;
-                break;
+  // Board
+  strokeWeight(3);
+  fill(255, 203, 47);
+  rect(30, 30, 100, 30, 10, 5, 10, 5);
+  textSize(16);
+  fill(0);
+  switch (lgText) {
+    case "Language":
+      lgX = 45;
+      break;
+    case "Idioma":
+      lgX = 55;
+      break;
+  }
+  text(lgText, lgX, 40, 100, 20);
+  // Function
+  if ((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 60) && (mousePressed)) {
+    lgBoard = true;
+  } else if (!((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 130))) {
+    lgBoard = false;
+  }        
+  if (lgBoard) {
+    fill(0);
+    rect(30, 65, 100, 60, 5, 10, 10, 10);
+    strokeWeight(3);
+    // UK Flag
+    // Blue
+    fill(69, 123, 157);
+    rect(30, 65, 100, 30, 10, 10, 10, 10);
+    // White
+    strokeWeight(0);
+    fill(241, 250, 238);
+    rect(70, 67, 20, 26);
+    rect(32, 75, 97, 10);
+    stroke(241, 250, 238);
+    strokeWeight(5);
+    line(35, 70, 125, 90);
+    line(35, 90, 125, 70);
+    // Red
+    strokeWeight(0);
+    fill(230, 57, 70);
+    rect(75, 67, 10, 26);
+    rect(32, 78, 97, 4);
+    stroke(230, 57, 70);
+    strokeWeight(2);
+    line(33, 69, 127, 91);
+    line(33, 91, 127, 69);
+    // Spain Flag
+    // Red
+    stroke(0);
+    strokeWeight(2);
+    fill(199, 3, 24);
+    rect(30, 95, 100, 30, 10, 10, 10, 10);
+    // Yellow
+    strokeWeight(0);
+    fill(252, 223, 0);
+    rect(32, 104, 97, 13);            
+    // Border
+    noFill();
+    stroke(3);
+    strokeWeight(3);
+    rect(30, 30, 100, 30, 10, 5, 10, 5);
+    strokeWeight(3);
+    if (darkMode) {
+      fill(229);
+    } else {
+      fill(50, 63, 121);
+    }
+    if ((mouseX > 30) && (mouseX < 130) && (mouseY > 65) && (mouseY < 95)) {
+      textSize(16);
+      text("English", 140, 85);
+      if (mousePressed) {
+        language = "EN";
+      }
+    } else {
+      if ((mouseX > 30) && (mouseX < 130) && (mouseY > 95) && (mouseY < 125)) {
+        text("Español", 140, 115);
+        if (mousePressed) {
+          language = "ES";
         }
-        text(lgText, lgX, 40, 100, 20);
-        // Function
-        if ((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 60) && (mousePressed)) {
-            lgBoard = true;
-        } else {
-            if (!((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 130))) {
-                lgBoard = false;
-            }
-        }
-        if (lgBoard) {
-            fill(0);
-            rect(30, 65, 100, 60, 5, 10, 10, 10);
-            strokeWeight(3);
-            // UK Flag
-            // Blue
-            fill(69, 123, 157);
-            rect(30, 65, 100, 30, 10, 10, 10, 10);
-            // White
-            strokeWeight(0);
-            fill(241, 250, 238);
-            rect(70, 67, 20, 26);
-            rect(32, 75, 97, 10);
-            stroke(241, 250, 238);
-            strokeWeight(5);
-            line(35, 70, 125, 90);
-            line(35, 90, 125, 70);
-            // Red
-            strokeWeight(0);
-            fill(230, 57, 70);
-            rect(75, 67, 10, 26);
-            rect(32, 78, 97, 4);
-            stroke(230, 57, 70);
-            strokeWeight(2);
-            line(33, 69, 127, 91);
-            line(33, 91, 127, 69);
-            // Spain Flag
-            // Red
-            stroke(0);
-            strokeWeight(2);
-            fill(199, 3, 24);
-            rect(30, 95, 100, 30, 10, 10, 10, 10);
-            // Yellow
-            strokeWeight(0);
-            fill(252, 223, 0);
-            rect(32, 104, 97, 13);            
-            // Border
-            noFill();
-            stroke(3);
-            strokeWeight(3);
-            rect(30, 30, 100, 30, 10, 5, 10, 5);
-            strokeWeight(3);
-//            for (int i = 95; i < 160; i += 30) {
-//                fill(0);
-//                line(30, i, 130, i);
-//            }
-            if (darkMode) {
-                fill(229);
-            } else {
-                fill(50, 63, 121);
-            }
-            if ((mouseX > 30) && (mouseX < 130) && (mouseY > 65) && (mouseY < 95)) {
-                textSize(16);
-                text("English", 140, 85);
-                if (mousePressed) {
-                    language = "EN";
-                }
-            } else {
-                if ((mouseX > 30) && (mouseX < 130) && (mouseY > 95) && (mouseY < 125)) {
-                    text("Español", 140, 115);
-                    if (mousePressed) {
-                        language = "ES";
-                    }
-                }                                    
-            }
-        }
+      }                                    
+    }
+  }
 }
 
 void animation() {
-        stroke(0);
-        strokeWeight(4);
-        fill(229, 229, 229);
-        // Re-drawing
-        if (darkMode) {
-            e1.update(mouseX, mouseY);
-            e1.display();
-            e2.update(mouseX, mouseY);
-            e2.display();
-        } else {
-            fill(150);
-            ellipse(295, 150, 80, 80);
-            ellipse(425, 150, 80, 80);
-            strokeWeight(2);
-            arc(295, 150, 60, 60, QUARTER_PI, PI);
-            arc(425, 150, 60, 60, 0, PI - QUARTER_PI);
-        }
-        image(photo, 210, 0);
-    }
+  stroke(0);
+  strokeWeight(4);
+  fill(229);
+  // Re-drawing
+  if (darkMode) {
+    e1.update(mouseX, mouseY);
+    e1.display();
+    e2.update(mouseX, mouseY);
+    e2.display();
+  } else {
+    fill(150);
+    ellipse(295, 150, 80, 80);
+    ellipse(425, 150, 80, 80);
+    strokeWeight(2);
+    arc(295, 150, 60, 60, QUARTER_PI, PI);
+    arc(425, 150, 60, 60, 0, PI - QUARTER_PI);
+  }
+  image(photo, 210, 0);
+}
+
+void miniRadar() {
+  if (darkMode) {
+    stroke(229);
+  } else {
+    stroke(50, 63, 121);
+  }
+  noFill();
+  strokeWeight(2);
+  for(int i = 25; i <= 75; i+= 25) {
+    ellipse(width / 2, width / 2, i, i);
+  }        
+  line(width / 2, 310, width / 2, 410);
+  line(310, width / 2, 410, width / 2);        
+  line(340, 340, 345, 345);
+  line(375, 345, 380, 340);
+  line(375, 375, 380, 380);
+  line(340, 380, 345, 375);
+        
+  strokeWeight(4);
+  ellipse(width / 2, width / 2, 100, 100);
+  line(310, width / 2, 320, width / 2);
+  line(400, width / 2, 410, width / 2);
+  line(width / 2, 310, width / 2, 320);
+  line(width / 2, 400, width / 2, 410);
+        
+  line(325, 325, 330, 330);
+  line(395, 325, 390, 330);
+  line(325, 395, 330, 390);
+  line(395, 395, 390, 390);
+       
+  stroke(240, 20, 20);
+  line(width / 2, width / 2, width / 2, 310);
+  stroke(0);
+}
 
 // Radar Tab
 void radarMenu(String backText) {
-        // Back Button
-        stroke(0);
-        strokeWeight(3);
-        fill(255, 203, 47);
-        rect(20, 20, 85, 30, 10, 5, 10, 5);
-        fill(0);
-        textSize(16);
-        switch (backText) {
-            case "Atrás":
-                backX = 42;
-                break;
-            case "Back":
-                backX = 44;
-                break;
-        }
-        text(backText, backX, 30, 70, 20);   
-        // Changes
-        if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
-            cursor(HAND);
-            if (mousePressed) {
-                tab = 0;
-            }
-        } else {
-            cursor(ARROW);
-      }
+  // Back Button
+  stroke(0);
+  strokeWeight(3);
+  fill(255, 203, 47);
+  rect(20, 20, 85, 30, 10, 5, 10, 5);
+  fill(0);
+  textSize(16);
+  switch (backText) {
+    case "Atrás":
+      backX = 42;
+      break;
+    case "Back":
+      backX = 44;
+      break;
+  }
+  text(backText, backX, 30, 70, 20);   
+  // Changes  
+  if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
+    cursor(HAND);
+    if (mousePressed) {
+      tab = 0;
+    }
+  } else {
+    cursor(ARROW);
+  }
 }
 
 void radarSwitch() {
