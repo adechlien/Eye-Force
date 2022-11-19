@@ -19,7 +19,7 @@ int index2=0;
 Eye e1, e2;
 PFont font;
 PImage icon, photo, moonIcon, sunIcon;
-String language = "ES", op1 = "Radar", op2, op3, op4;
+String language = "ES", op1, op2, op3 = "Radar", op4;
 String disposeText, backText, hisText, lgText, useText;
 int hora = hour(), minuto = minute(), count = 0, x = 0, y = 10;
 int add, disposeX, backX, hisX, lgX, op4X, useX, tab = 0;
@@ -36,7 +36,10 @@ void setup(){
   moonIcon = loadImage("images/moon.png"); 
   sunIcon = loadImage("images/sun.png");
   surface.setIcon(icon); 
-  textFont(font); 
+  textFont(font);
+  smooth();
+  myPort = new Serial(this,"COM3", 9600); // starts the serial communication
+  myPort.bufferUntil('.');
 } 
 
 void draw() {
@@ -44,8 +47,8 @@ void draw() {
     case "EN":
       lgText = "Language";
       disposeText = "Exit";
+      op1 = "History";
       op2 = "Option";
-      op3 = "Option";
       op4 = "Instructions";
       backText = "Back";
       hisText = "History";
@@ -54,8 +57,8 @@ void draw() {
     case "ES":
       lgText = "Idioma";
       disposeText = "Salir";
+      op1 = "Historial";
       op2 = "Opción";
-      op3 = "Opción";
       op4 = "Instrucciones";
       backText = "Atrás";
       hisText = "Historial";
@@ -63,28 +66,36 @@ void draw() {
       break;            
     }
     switch (tab) {
-      case 0:
+      case 0: // ventana de menu
         if (darkMode) {
           background(50, 63, 121);
         } else {
           background(230, 230, 250);
-        }
+        }        
         mainMenu(disposeText, op1, op2, op3, op4);
         languageSelection();
         animation();
         break;
-      case 1:
-        if (darkMode) {
-          background(45, 58, 106);
+      case 1: // ventana de historial
+      if (darkMode) {
+          background(50, 63, 121);
         } else {
           background(230, 230, 250);
         }
         radarMenu(backText);
-        radarSwitch();
         historyTable(hisText);
-        turningLines(add);
         break;
-      case 2:
+      case 2: // ventana de radar
+        noStroke();
+        fill(50, 63, 121, 9); 
+        rect(0, 0, width, height); 
+        fill(46, 125, 85);
+        drawRadar();
+        drawObject();
+        drawLine();
+        radarMenu(backText);        
+        break;
+      case 3: // ventana de instrucciones
         if (darkMode) {
           background(50, 63, 121);
         } else {
@@ -94,9 +105,6 @@ void draw() {
         break;
     }
 }
-    
-    
-
 
 void serialEvent (Serial myPort) { // starts reading data from the Serial Port 
   // reads the data from the Serial Port up to the character '.' and puts it into the String variable "data". 
@@ -109,6 +117,50 @@ void serialEvent (Serial myPort) { // starts reading data from the Serial Port
   iAngle = int(angle); 
   iDistance = int(distance);
 } 
+
+void drawRadar() { // semicirculos y lineas estaticas
+  pushMatrix();
+  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  noFill();
+  strokeWeight(2);
+  stroke(190, 231, 209);
+  // draws the arc lines
+  arc(0,0,(width-width*0.0625),(width-width*0.0625),PI,TWO_PI);
+  arc(0,0,(width-width*0.27),(width-width*0.27),PI,TWO_PI);
+  arc(0,0,(width-width*0.479),(width-width*0.479),PI,TWO_PI);
+  arc(0,0,(width-width*0.687),(width-width*0.687),PI,TWO_PI);
+  // draws the angle lines
+  line(-width/2,0,width/2,0);
+  line(0,0,(-width/2)*cos(radians(30)),(-width/2)*sin(radians(30)));
+  line(0,0,(-width/2)*cos(radians(60)),(-width/2)*sin(radians(60)));
+  line(0,0,(-width/2)*cos(radians(90)),(-width/2)*sin(radians(90)));
+  line(0,0,(-width/2)*cos(radians(120)),(-width/2)*sin(radians(120)));
+  line(0,0,(-width/2)*cos(radians(150)),(-width/2)*sin(radians(150)));
+  //line((-width/2)*cos(radians(30)),0,width/2,0);
+  popMatrix();
+}
+void drawObject() { // linea dinamica roja
+  pushMatrix();
+  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  strokeWeight(12);
+  stroke(255,10,10); // red color
+  pixsDistance = iDistance*((height-height*0.1666)*0.025); // covers the distance from the sensor from cm to pixels
+  // limiting the range to 40 cms
+  if(iDistance<40){
+    // draws the object according to the angle and the distance
+  line(pixsDistance*cos(radians(iAngle)),-pixsDistance*sin(radians(iAngle)),(width-width*0.505)*cos(radians(iAngle)),-(width-width*0.505)*sin(radians(iAngle)));
+  }
+  popMatrix();
+}
+
+void drawLine() { // linea dinamica verde
+  pushMatrix();
+  strokeWeight(7);
+  stroke(190, 231, 209);
+  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  line(0,0,(height-height*0.12)*cos(radians(iAngle)),-(height-height*0.12)*sin(radians(iAngle))); // draws the line according to the angle
+  popMatrix();
+}
 
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
@@ -187,11 +239,20 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   } else {
     cursor(ARROW);
   }
+  // Option 2 600, 280, 120, 40
+  if ((mouseX > 600) && (mouseX < 720) && (mouseY > 280) && (mouseY < 320)) {
+    cursor(HAND);
+    if (mousePressed) {
+      tab = 2;
+    }
+  } else {
+    cursor(ARROW);
+  }
   // Option 4
   if ((mouseX > 560) && (mouseX < 720) && (mouseY > 340) && (mouseY < 380)) {
    cursor(HAND);
    if (mousePressed) {
-     tab = 2;
+     tab = 3;
    }
  }
  // Exit Button
@@ -203,7 +264,7 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
         }
     }
 
-    void languageSelection() {
+void languageSelection() {
         // Board
         strokeWeight(3);
         fill(255, 203, 47);
@@ -293,9 +354,9 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
                 }                                    
             }
         }
-    }
+}
 
-    void animation() {
+void animation() {
         stroke(0);
         strokeWeight(4);
         fill(229, 229, 229);
@@ -316,8 +377,8 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
         image(photo, 210, 0);
     }
 
-    // Radar Tab
-    void radarMenu(String backText) {
+// Radar Tab
+void radarMenu(String backText) {
         // Back Button
         stroke(0);
         strokeWeight(3);
@@ -333,65 +394,7 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
                 backX = 44;
                 break;
         }
-        text(backText, backX, 30, 70, 20);
-        // Radar
-        strokeWeight(1);
-        if (darkMode) {
-            stroke(190, 231, 209);
-        } else {
-            stroke(46, 125, 85);
-        }
-//        stroke(250, 21, 29); // Red color
-        // Y-Axis and X-Axis
-        line(250, 40, 250, 460);
-        line(40, 250, 460, 250);
-        // Diagonals
-        line(174, 174, 186, 186);
-        line(326, 174, 314, 186);
-        line(174, 326, 186, 314);
-        line(326, 326, 314, 314);
-        // Circles
-        noFill();
-        arc(250, 250, 370, 370, 0, QUARTER_PI);
-        arc(250, 250, 370, 370, HALF_PI, PI - QUARTER_PI);
-        arc(250, 250, 370, 370, PI, PI + QUARTER_PI);
-        arc(250, 250, 370, 370, PI + HALF_PI, TWO_PI - QUARTER_PI);
-        for (int i = 50; i <= 275; i += 75) {
-            ellipse(250, 250, i, i);
-        }
-        // Decoration
-        strokeWeight(4);
-        ellipse(250, 250, 350, 350);
-        line(240, 250, 260, 250);
-        line(250, 240, 250, 260);
-        line(75, 250, 100, 250);
-        line(425, 250, 400, 250);
-        line(250, 75, 250, 100);
-        line(250, 425, 250, 400);
-        line(128, 128, 140, 140);
-        line(372, 128, 360, 140);
-        line(128, 372, 140, 360);
-        line(372, 372, 360, 360);
-        // Distance
-        strokeWeight(1);
-        if (darkMode) {
-            fill(190, 231, 209);
-        } else {
-            fill(46, 125, 85);
-        }
-        textSize(15);
-//        text("2", 280, 248);
-        text("10", 314, 246);
-        text("20", 354, 246);
-        text("30", 392, 246);
-        text("40", 430, 246);
-        if (darkMode) {
-                    fill(45, 58, 106);
-                } else {
-                    fill(230, 230, 250);
-                }
-        strokeWeight(0);
-        rect(0, 251, 610, 250);
+        text(backText, backX, 30, 70, 20);   
         // Changes
         if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
             cursor(HAND);
@@ -400,157 +403,132 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
             }
         } else {
             cursor(ARROW);
-        }
+      }
+}
+
+void radarSwitch() {
+  // Buttons
+  strokeWeight(3);
+  stroke(0);
+  // Red/Off
+  fill(255, 155, 140);
+  rect(422, 450, 40, 30, 0, 10, 10, 0);
+  // Green/On
+  fill(160, 255, 179);
+  rect(380, 450, 40, 30, 10, 0, 0, 10);
+  // Underline
+  strokeWeight(3);
+  noFill();
+  // Texts
+  fill(0);
+  textSize(14);
+  text("On", 391, 470);
+  text("Off", 431, 470);
+  // Function
+  if ((mouseX > 380) && (mouseX < 420) && (mouseY > 450) && (mouseY < 480)) {
+    cursor(HAND);
+    if (mousePressed) {
+      on = true;
+      add = 1;
     }
-
-    void radarSwitch() {
-        // Buttons
-        strokeWeight(3);
-        stroke(0);
-        // Red/Off
-        fill(255, 155, 140);
-        rect(422, 450, 40, 30, 0, 10, 10, 0);
-        // Green/On
-        fill(160, 255, 179);
-        rect(380, 450, 40, 30, 10, 0, 0, 10);
-        // Underline
-        strokeWeight(3);
-        noFill();
-        // Texts
-        fill(0);
-        textSize(14);
-        text("On", 391, 470);
-        text("Off", 431, 470);
-        // Function
-        if ((mouseX > 380) && (mouseX < 420) && (mouseY > 450) && (mouseY < 480)) {
-            cursor(HAND);
-            if (mousePressed) {
-                on = true;
-                add = 1;
-            }
-        } else {
-            if ((mouseX > 422) && (mouseX < 462) && (mouseY > 450) && (mouseY < 480) && (mousePressed)) {
-                cursor(HAND);
-                if (mousePressed) {
-                    on = false;
-                    add = 0;
-                }
-            } else {
-                cursor(ARROW);
-            }
-        }
+  } else {
+    if ((mouseX > 422) && (mouseX < 462) && (mouseY > 450) && (mouseY < 480) && (mousePressed)) {
+      cursor(HAND);
+      if (mousePressed) {
+        on = false;
+        add = 0;
+      }
+    } else {
+      cursor(ARROW);
     }
+  }
+}
 
-    void historyTable(String hisText) {        
-        strokeWeight(3);
-        stroke(0);
-        if (darkMode) {
-            fill(229);
-        } else {
-            fill(50, 63, 121);
-        }
-        textSize(20);
-        // Title
-        text(hisText, 570, 35, 160, 50);
-        // Table
-        fill(229);
-        rect(520, 60, 170, 400, 10, 10, 10, 10);
-        for (int i = 100; i <= 430; i += 40) {
-            strokeWeight(1);
-            line(520, i, 690, i);
-        }
-        // Function
-        fill(0);
-        text(hora + ":" + minuto, 625, 75, 690, 100);
+void historyTable(String hisText) {        
+  strokeWeight(3);
+  stroke(0);
+  if (darkMode) {
+    fill(229);
+  } else {
+    fill(50, 63, 121);
+  }
+  textSize(20);
+  // Title
+  text(hisText, 570, 35, 160, 50);
+  // Table
+  fill(229);
+  rect(520, 60, 170, 400, 10, 10, 10, 10);
+  for (int i = 100; i <= 430; i += 40) {
+    strokeWeight(1);
+    line(520, i, 690, i);
+  }
+  // Function
+  fill(0);
+  text(hora + ":" + minuto, 625, 75, 690, 100);
+}   
+
+// Code taken from "Mouse Arc Tangent", a Processing starting project.
+class Eye {
+  int x, y;
+  int size;
+  float angle = (float) 0.0;
+  
+  Eye(int tx, int ty, int ts) {
+    x = tx;
+    y = ty;
+    size = ts;
+  }
+
+  void update(int mx, int my) {
+    angle = atan2(my - y, mx - x);
+  }
+
+  void display() {
+    pushMatrix();
+    translate(x, y);
+    fill(255, 255, 147);
+    ellipse(0, 0, size, size);
+    rotate(angle);
+    fill(20);
+    ellipse(size / 4, 0, size / 2, size / 2);
+    popMatrix();
     }
+}
 
-    void turningLines(int add) {
-        delay(40);
-        count = count + add;
-        move = count * (2 * PI) / 60;
-        translate(250, 250);
-        rotate(move);
-        strokeWeight(5);
-        int alpha = 255, moveY[] = {-185, -185, -185, -185, -184, -183, -183, -182,
-            -181, -180, -178, -176, -174, -172}, k = 0;
-        if (add == 1) {
-            stroke(240, 40, 40);
-            line(0, 0, 0, -175);
-//            for (int i = 0; i > -70; i -= 5) {
-//                stroke(240, 40, 40, alpha);
-//                line(0, 0, i, moveY[k] + 10);
-//                alpha -= 15;
-//                k++;
-//            }
-        } else {
-            stroke(240, 40, 40);
-            line(0, 0, 0, -175);
-        }
-        stroke(0);
+// Information Tab
+void infoPage(String backText) {
+  if (darkMode) {
+    fill(229);
+  } else {
+    fill(50, 63, 121);
+  }
+  // Title
+  textSize(25);
+  text(useText, 300, 15, 240, 40);
+  rect(20, 40, 680, 440, 5, 10, 5, 10);
+  // Back Button
+  stroke(0);
+  strokeWeight(3);
+  fill(255, 203, 47);
+  rect(20, 450, 85, 30, 5, 10, 5, 10);
+  fill(0);
+  textSize(16);
+  text(backText, 42, 460, 70, 20);
+  // Explanation
+  if (darkMode) {
+    fill(50, 63, 121);
+  } else {
+    fill(229);
+  }
+  textSize(22);
+  text("To start the radar, click on Radar Button", 40, 80);
+  // Changes 
+  if ((mouseX > 20) && (mouseX < 105) && (mouseY > 450) && (mouseY < 480)) {
+    cursor(HAND);
+    if (mousePressed) {
+      tab = 0;
     }
-
-    // Code taken from "Mouse Arc Tangent", a Processing starting project.
-    class Eye {
-        int x, y;
-        int size;
-        float angle = (float) 0.0;
-
-        Eye(int tx, int ty, int ts) {
-            x = tx;
-            y = ty;
-            size = ts;
-        }
-
-        void update(int mx, int my) {
-            angle = atan2(my - y, mx - x);
-        }
-
-        void display() {
-            pushMatrix();
-            translate(x, y);
-            fill(255, 255, 147);
-            ellipse(0, 0, size, size);
-            rotate(angle);
-            fill(20);
-            ellipse(size / 4, 0, size / 2, size / 2);
-            popMatrix();
-        }
-    }
-
-    // Info Tab
-    void infoPage(String backText) {
-        if (darkMode) {
-            fill(229);
-        } else {
-            fill(50, 63, 121);
-        }
-        // Title
-        textSize(25);
-        text(useText, 300, 15, 240, 40);
-        rect(20, 40, 680, 440, 5, 10, 5, 10);
-        // Back Button
-        stroke(0);
-        strokeWeight(3);
-        fill(255, 203, 47);
-        rect(20, 450, 85, 30, 5, 10, 5, 10);
-        fill(0);
-        textSize(16);
-        text(backText, 42, 460, 70, 20);
-        // Explanation
-        if (darkMode) {
-            fill(50, 63, 121);
-        } else {
-            fill(229);
-        }
-        textSize(22);
-        text("To start the radar, click on Radar Button", 40, 80);
-        // Changes
-        if ((mouseX > 20) && (mouseX < 105) && (mouseY > 450) && (mouseY < 480)) {
-            cursor(HAND);
-            if (mousePressed) {
-                tab = 0;
-            }
-        } else {
-            cursor(ARROW);
-        }
-    }
+  } else {
+    cursor(ARROW);
+  }
+}
