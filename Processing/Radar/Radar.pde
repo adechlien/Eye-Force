@@ -39,7 +39,11 @@ void setup(){
   textFont(font);
   smooth();
   //myPort = new Serial(this,"COM3", 9600); // starts the serial communication
+<<<<<<< HEAD
   //myPort.bufferUntil('.');
+=======
+ // myPort.bufferUntil('.');
+>>>>>>> 691dafee602d915584de801cdabdbc92bd29b557
 } 
 
 void draw() {
@@ -108,6 +112,8 @@ void draw() {
         }
         infoPage(backText);
         break;
+        
+        
     }
 }
 
@@ -155,8 +161,8 @@ void drawRadar() { // semicirculos y lineas estaticas
 void drawObject() { // linea dinamica roja
   pushMatrix();
   translate(width/2,height-height*0.074); // moves the starting coordinats to new location
-  strokeWeight(12);
-  stroke(255,10,10); // red color
+  strokeWeight(10);
+  stroke(0); // color del borde
   pixsDistance = iDistance*((height-height*0.1666)*0.025); // covers the distance from the sensor from cm to pixels
   // limiting the range to 40 cms
   if(iDistance<40){
@@ -190,7 +196,7 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   + " - " + String.valueOf(hour()) + ":" + String.valueOf(minute()) + ":"
   + String.valueOf(second()), 15, 475, 250, 30);
   // Buttons
-  strokeWeight(3);
+  strokeWeight(2);
   textSize(20);
   // Left Buttons
   rect(-1, 280, 160, 40, 0, 5, 15, 0);
