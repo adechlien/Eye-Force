@@ -39,11 +39,7 @@ void setup(){
   textFont(font);
   smooth();
   //myPort = new Serial(this,"COM3", 9600); // starts the serial communication
-<<<<<<< HEAD
   //myPort.bufferUntil('.');
-=======
- // myPort.bufferUntil('.');
->>>>>>> 691dafee602d915584de801cdabdbc92bd29b557
 } 
 
 void draw() {
@@ -70,39 +66,33 @@ void draw() {
       break;            
     }
     switch (tab) {
-      case 0: // ventana de menu
+      case 0: // Menu
         if (darkMode) {
           background(50, 63, 121);
         } else {
           background(230, 230, 250);
-        }
-        miniRadar();
+        }        
         mainMenu(disposeText, op1, op2, op3, op4);
         languageSelection();
         animation();
+        iconRadar();
         break;
       case 1: // ventana de historial
       if (darkMode) {
           background(50, 63, 121);
         } else {
           background(230, 230, 250);
-        }        
-        radarMenu(backText);
+        }
+        backButton(backText);
+        miniRadar();
         historyTable(hisText);
         break;
       case 2: // ventana de radar
-        noStroke();
-        fill(57, 70, 121);
-        rect(0, 0, 140, 70);
-        rect(590, 0, 130, 90);
-        rect(0, 465, width, 500);
-        fill(50, 63, 121, 20);         
-        rect(0, 0, width, height); 
-        fill(46, 125, 85);
-        drawRadar();
-        drawObject();
-        drawLine();
-        radarMenu(backText);        
+        radarBg();
+        radar();
+        redLine();
+        radarLine();
+        backButton(backText);        
         break;
       case 3: // ventana de instrucciones
         if (darkMode) {
@@ -111,12 +101,11 @@ void draw() {
           background(230, 230, 250);
         }
         infoPage(backText);
-        break;
-        
-        
+        break;               
     }
 }
 
+// Arduino
 void serialEvent (Serial myPort) { // starts reading data from the Serial Port 
   // reads the data from the Serial Port up to the character '.' and puts it into the String variable "data". 
   port = myPort.readStringUntil('.'); 
@@ -129,58 +118,7 @@ void serialEvent (Serial myPort) { // starts reading data from the Serial Port
   iDistance = int(distance);
 } 
 
-void drawRadar() { // semicirculos y lineas estaticas
-  pushMatrix();
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
-  noFill();
-  strokeWeight(1);
-  stroke(190, 231, 209);
-  // draws the arc lines  
-  arc(0,0,(width-width*0.27),(width-width*0.27),PI,TWO_PI);
-  arc(0,0,(width-width*0.479),(width-width*0.479),PI,TWO_PI);
-  arc(0,0,(width-width*0.687),(width-width*0.687),PI,TWO_PI);
-  // draws the angle lines
-  line(-120, -120, -150, -150);
-  line(120, -120, 150, -150);
-  //line(0,0,(-width/2 + 20)*cos(radians(30)),(-width/2 + 25)*sin(radians(30)));
-  //line(0,0,(-width/2)*cos(radians(60)),(-width/2 + 28)*sin(radians(60)));
-  line(0,0,(-width/2)*cos(radians(90)),(-width/2 + 22)*sin(radians(90)));
-  //line(0,0,(-width/2)*cos(radians(120)),(-width/2 + 28)*sin(radians(120)));
-  //line(0,0,(-width/2 + 20)*cos(radians(150)),(-width/2 + 25)*sin(radians(150)));
-  //line((-width/2)*cos(radians(30)),0,width/2,0);
-  strokeWeight(5);
-  arc(0,0,(width-width*0.0625),(width-width*0.0625),PI,TWO_PI);
-  line(0, (-width/2 + 22)*sin(radians(90)), 0,(-width/2 + 60)*sin(radians(90)));
-  line(-width/2 + 22, 0, width/2 - 22, 0);
-  line(-218, -218, -238, -238);
-  line(218, -218, 238, -238);
-  line(0, 0, 0, -20);
-  line(-20, 0, 20, 0);
-  popMatrix();
-}
-void drawObject() { // linea dinamica roja
-  pushMatrix();
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
-  strokeWeight(10);
-  stroke(0); // color del borde
-  pixsDistance = iDistance*((height-height*0.1666)*0.025); // covers the distance from the sensor from cm to pixels
-  // limiting the range to 40 cms
-  if(iDistance<40){
-    // draws the object according to the angle and the distance
-  line(pixsDistance*cos(radians(iAngle)),-pixsDistance*sin(radians(iAngle)),(width-width*0.505)*cos(radians(iAngle)),-(width-width*0.505)*sin(radians(iAngle)));
-  }
-  popMatrix();
-}
-
-void drawLine() { // linea dinamica verde
-  pushMatrix();
-  strokeWeight(7);
-  stroke(190, 231, 209);
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
-  line(0,0,(height-height*0.12)*cos(radians(iAngle)),-(height-height*0.12)*sin(radians(iAngle))); // draws the line according to the angle
-  popMatrix();
-}
-
+// 0. Menu    
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
   textSize(26);
@@ -398,7 +336,7 @@ void animation() {
   image(photo, 210, 0);
 }
 
-void miniRadar() {
+void iconRadar() {
   if (darkMode) {
     stroke(229);
   } else {
@@ -433,96 +371,6 @@ void miniRadar() {
   stroke(0);
 }
 
-// Radar Tab
-void radarMenu(String backText) {
-  // Back Button
-  stroke(0);
-  strokeWeight(3);
-  fill(255, 203, 47);
-  rect(20, 20, 85, 30, 10, 5, 10, 5);
-  fill(0);
-  textSize(16);
-  switch (backText) {
-    case "Atrás":
-      backX = 42;
-      break;
-    case "Back":
-      backX = 44;
-      break;
-  }
-  text(backText, backX, 30, 70, 20);   
-  // Changes  
-  if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
-    cursor(HAND);
-    if (mousePressed) {
-      tab = 0;
-    }
-  } else {
-    cursor(ARROW);
-  }
-}
-
-void radarSwitch() {
-  // Buttons
-  strokeWeight(3);
-  stroke(0);
-  // Red/Off
-  fill(255, 155, 140);
-  rect(422, 450, 40, 30, 0, 10, 10, 0);
-  // Green/On
-  fill(160, 255, 179);
-  rect(380, 450, 40, 30, 10, 0, 0, 10);
-  // Underline
-  strokeWeight(3);
-  noFill();
-  // Texts
-  fill(0);
-  textSize(14);
-  text("On", 391, 470);
-  text("Off", 431, 470);
-  // Function
-  if ((mouseX > 380) && (mouseX < 420) && (mouseY > 450) && (mouseY < 480)) {
-    cursor(HAND);
-    if (mousePressed) {
-      on = true;
-      add = 1;
-    }
-  } else {
-    if ((mouseX > 422) && (mouseX < 462) && (mouseY > 450) && (mouseY < 480) && (mousePressed)) {
-      cursor(HAND);
-      if (mousePressed) {
-        on = false;
-        add = 0;
-      }
-    } else {
-      cursor(ARROW);
-    }
-  }
-}
-
-void historyTable(String hisText) {        
-  strokeWeight(3);
-  stroke(0);
-  if (darkMode) {
-    fill(229);
-  } else {
-    fill(50, 63, 121);
-  }
-  textSize(20);
-  // Title
-  text(hisText, 570, 35, 160, 50);
-  // Table
-  fill(229);
-  rect(520, 60, 170, 400, 10, 10, 10, 10);
-  for (int i = 100; i <= 430; i += 40) {
-    strokeWeight(1);
-    line(520, i, 690, i);
-  }
-  // Function
-  fill(0);
-  text(hora + ":" + minuto, 625, 75, 690, 100);
-}   
-
 // Code taken from "Mouse Arc Tangent", a Processing starting project.
 class Eye {
   int x, y;
@@ -551,7 +399,174 @@ class Eye {
     }
 }
 
-// Information Tab
+// 1. Historial
+void miniRadar() {
+        strokeWeight(1);
+        if (darkMode) {
+            stroke(190, 231, 209);
+        } else {
+            stroke(46, 125, 85);
+        }      
+        // Y-Axis and X-Axis
+        line(570, 250, 570, 450);
+        line(470, 350, 670, 350);
+        // Diagonals
+        line(535, 315, 540, 320);
+        line(605, 315, 600, 320);
+        line(535, 385, 540, 380);
+        line(605, 385, 600, 380);
+        // Circles
+        noFill();
+        arc(570, 350, 192, 192, 0, QUARTER_PI);
+        arc(570, 350, 192, 192, HALF_PI, PI - QUARTER_PI);
+        arc(570, 350, 192, 192, PI, PI + QUARTER_PI);
+        arc(570, 350, 192, 192, PI + HALF_PI, TWO_PI - QUARTER_PI);
+        for (int i = 0; i <= 135; i += 45) {
+            ellipse(570, 350, i, i);
+        }
+        // Decoration
+        strokeWeight(4);
+        ellipse(570, 350, 180, 180);
+        line(565, 350, 575, 350);
+        line(570, 345, 570, 355);
+        line(480, 350, 485, 350);
+        line(655, 350, 660, 350);
+        line(570, 260, 570, 265);
+        line(570, 435, 570, 440);
+        line(507, 287, 512, 292);
+        line(633, 287, 628, 292);
+        line(507, 413, 512, 408);
+        line(633, 413, 628, 408);
+}
+
+void historyTable(String hisText) {        
+  strokeWeight(3);
+  stroke(0);
+  if (darkMode) {
+    fill(229);
+  } else {
+    fill(50, 63, 121);
+  }
+  textSize(20);
+  // Title
+  text(hisText, width/2-35, 45, 120, 50);
+  // Table
+  fill(229);
+  rect(25, 80, 670, 150, 10, 10, 10, 10);
+  for (int i = 167; i <= 620; i += 127) {
+    strokeWeight(1);
+    line(i, 85, i, 225);
+  }
+  line(50, 155, 670, 155);
+  // Function
+  fill(0);
+  text(hora + ":" + minuto, 60, 90, 60, 30);
+}
+
+void backButton(String backText) {
+  // Back Button
+  stroke(0);
+  strokeWeight(3);
+  fill(255, 203, 47);
+  rect(20, 20, 85, 30, 10, 5, 10, 5);
+  fill(0);
+  textSize(16);
+  switch (backText) {
+    case "Atrás":
+      backX = 42;
+      break;
+    case "Back":
+      backX = 44;
+      break;
+  }
+  text(backText, backX, 30, 70, 20);  
+  // Changes  
+  if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
+    cursor(HAND);
+    if (mousePressed) {
+      tab = 0;
+    }
+  } else {
+    cursor(ARROW);
+  }
+}
+
+// 2. Radar
+void radarBg(){
+  noFill();
+  stroke(14);
+  strokeWeight(80);
+  arc(width/2, 440, 746, 700, PI, TAU);
+  noStroke();
+  fill(14);
+  rect(0, 0, width, 124);
+  rect(0, 465, width, 500);        
+  rect(0, 0, 20, 500, 10);
+  rect(700, 0, 20, 500);
+  rect(20, 124, 50, 100);
+  rect(650, 124, 50, 100);
+  rect(60, 110, 60, 60);
+  rect(600, 100, 60, 70);
+  fill(0, 9);         
+  rect(0, 0, width, height); 
+  fill(46, 125, 85); 
+}
+
+void radar() { // semicirculos y lineas estaticas
+  pushMatrix();
+  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  noFill();
+  strokeWeight(1);
+  stroke(255);
+  // draws the arc lines  
+  arc(0,0,(width-width*0.27),(width-width*0.27),PI,TWO_PI);
+  arc(0,0,(width-width*0.479),(width-width*0.479),PI,TWO_PI);
+  arc(0,0,(width-width*0.687),(width-width*0.687),PI,TWO_PI);
+  // draws the angle lines
+  line(-120, -120, -150, -150);
+  line(120, -120, 150, -150);
+  //line(0,0,(-width/2 + 20)*cos(radians(30)),(-width/2 + 25)*sin(radians(30)));
+  //line(0,0,(-width/2)*cos(radians(60)),(-width/2 + 28)*sin(radians(60)));
+  line(0,0,(-width/2)*cos(radians(90)),(-width/2 + 22)*sin(radians(90)));
+  //line(0,0,(-width/2)*cos(radians(120)),(-width/2 + 28)*sin(radians(120)));
+  //line(0,0,(-width/2 + 20)*cos(radians(150)),(-width/2 + 25)*sin(radians(150)));
+  //line((-width/2)*cos(radians(30)),0,width/2,0);
+  strokeWeight(5);
+  arc(0,0,(width-width*0.0625),(width-width*0.0625),PI,TWO_PI);
+  line(0, (-width/2 + 22)*sin(radians(90)), 0,(-width/2 + 60)*sin(radians(90)));
+  line(-width/2 + 22, 0, width/2 - 22, 0);
+  line(-218, -218, -238, -238);
+  line(218, -218, 238, -238);
+  line(0, 0, 0, -20);
+  line(-20, 0, 20, 0);
+  popMatrix();
+}
+
+void redLine() { // linea dinamica roja
+  pushMatrix();
+  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  strokeWeight(10);
+  stroke(255, 0, 0); // color del borde
+  pixsDistance = iDistance*((height-height*0.1666)*0.025); // covers the distance from the sensor from cm to pixels
+  // limiting the range to 40 cms
+  if(iDistance<30){
+    // draws the object according to the angle and the distance
+  line(pixsDistance*cos(radians(iAngle)),-pixsDistance*sin(radians(iAngle)),(width-width*0.535)*cos(radians(iAngle)),-(width-width*0.535)*sin(radians(iAngle)));
+  }
+  popMatrix();
+}
+
+void radarLine() { // linea dinamica verde
+  pushMatrix();
+  strokeWeight(4);
+  stroke(255);
+  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  line(0,0,(height-height*0.32)*cos(radians(iAngle)),-(height-height*0.32)*sin(radians(iAngle))); // draws the line according to the angle
+  popMatrix();
+}
+
+// 3. Instrucciones
+
 void infoPage(String backText) {
   if (darkMode) {
     fill(229);
