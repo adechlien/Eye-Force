@@ -4,7 +4,8 @@ import processing.core.PFont;
 import processing.core.PImage; 
 import processing.serial.*; // imports library for serial communication 
 import java.awt.event.KeyEvent; // imports library for reading the data from the serial port 
-import java.io.IOException; 
+import java.io.IOException;
+import ddf.minim.*;
 Serial myPort; // defines Object Serial 
 // defubes variables 
 String angle=""; 
@@ -16,9 +17,11 @@ int iAngle, iDistance;
 int index1=0; 
 int index2=0;
 
+Minim minim;
+AudioPlayer player;
 Eye e1, e2;
 PFont font;
-PImage icon, photo, moonIcon, sunIcon;
+PImage icon, photo, moonIcon, sunIcon, owl2;
 String language = "ES", op1, op2, op3 = "Radar", op4;
 String disposeText, backText, hisText, lgText, useText;
 int hora = hour(), minuto = minute(), count = 0, x = 0, y = 10;
@@ -35,9 +38,12 @@ void setup(){
   photo = loadImage("images/owl.png"); 
   moonIcon = loadImage("images/moon.png"); 
   sunIcon = loadImage("images/sun.png");
+  owl2 = loadImage("images/staticOwl.png");
   surface.setIcon(icon); 
   textFont(font);
   smooth();
+  minim = new Minim(this);
+  player = minim.loadFile("sonido.wav");
   //myPort = new Serial(this,"COM3", 9600); // starts the serial communication
   //myPort.bufferUntil('.');
 } 
@@ -84,7 +90,6 @@ void draw() {
           background(230, 230, 250);
         }
         backButton(backText);
-        miniRadar();
         historyTable(hisText);
         break;
       case 2: // ventana de radar
@@ -400,44 +405,7 @@ class Eye {
 }
 
 // 1. Historial
-void miniRadar() {
-        strokeWeight(1);
-        if (darkMode) {
-            stroke(190, 231, 209);
-        } else {
-            stroke(46, 125, 85);
-        }      
-        // Y-Axis and X-Axis
-        line(570, 250, 570, 450);
-        line(470, 350, 670, 350);
-        // Diagonals
-        line(535, 315, 540, 320);
-        line(605, 315, 600, 320);
-        line(535, 385, 540, 380);
-        line(605, 385, 600, 380);
-        // Circles
-        noFill();
-        arc(570, 350, 192, 192, 0, QUARTER_PI);
-        arc(570, 350, 192, 192, HALF_PI, PI - QUARTER_PI);
-        arc(570, 350, 192, 192, PI, PI + QUARTER_PI);
-        arc(570, 350, 192, 192, PI + HALF_PI, TWO_PI - QUARTER_PI);
-        for (int i = 0; i <= 135; i += 45) {
-            ellipse(570, 350, i, i);
-        }
-        // Decoration
-        strokeWeight(4);
-        ellipse(570, 350, 180, 180);
-        line(565, 350, 575, 350);
-        line(570, 345, 570, 355);
-        line(480, 350, 485, 350);
-        line(655, 350, 660, 350);
-        line(570, 260, 570, 265);
-        line(570, 435, 570, 440);
-        line(507, 287, 512, 292);
-        line(633, 287, 628, 292);
-        line(507, 413, 512, 408);
-        line(633, 413, 628, 408);
-}
+
 
 void historyTable(String hisText) {        
   strokeWeight(3);
@@ -461,6 +429,9 @@ void historyTable(String hisText) {
   // Function
   fill(0);
   text(hora + ":" + minuto, 60, 90, 60, 30);
+  
+  // Owl
+  image(owl2, width/2 - 100, 300);
 }
 
 void backButton(String backText) {
