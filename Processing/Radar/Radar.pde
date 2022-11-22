@@ -114,31 +114,24 @@ void draw() {
 
 // Arduino
 
-void serialEvent (Serial myPort) { // recibe los datso del puerto  
-  port = myPort.readStringUntil('.'); // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
+void serialEvent (Serial myPort) {// recibe los datso del puerto 
+  port = myPort.readStringUntil('.');  // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
   port = port.substring(0,port.length()-1); 
-  index = port.indexOf(","); // se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
+  index = port.indexOf(",");// se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
   angle= port.substring(0, index); // lee desde el inicio hasta un lugar antes de la coma, es decir, el ángulo
-  distance= port.substring(index+1, port.length()); // lee desde un caracter despues de la coma y hasta el final, es decir, la distancia en cm 
-  // conversion de string a entero 
-  angleInt = int(angle); 
-  distanceInt = int(distance);
-} 
-
-void serialEvent (Serial myPort) {
-  port = myPort.readStringUntil('.'); 
-  port = port.substring(0,port.length()-1); 
-  index = port.indexOf(",");
-  angle= port.substring(0, index); 
-  distance= port.substring(index + 1, port.length());
-  angleInt = int(angle); 
+  distance= port.substring(index + 1, port.length());// lee desde un caracter despues de la coma y hasta el final, es decir, la distancia en cm 
+  angleInt = int(angle); // conversion de string a entero 
   distanceInt = int(distance);
   if (distanceInt > 30) {
     player.pause();
   } else {
     player.play();   
     time[i] = hour() + ":" + minute() + ":" + second();
+    i = i +1;
     text(time[i], width/2, height/2, 120, 30);
+    if (i == 9){
+       i = 0;
+    }
   }
 }
 
@@ -158,7 +151,7 @@ void alarm() {
 //recursividad 
 void audio_rec(){
   player.play();
-  if (index == 0000){
+  if (int(password)== 0000){
     player.pause();
   } else {
     audio_rec();
@@ -578,7 +571,7 @@ void radarLine() {
   stroke(255);
 
   translate(width/2,height-height*0.074); // translación de sistema de coordenadas
-  line(0,0,(height-height*0.32)*cos(radians(iAngle)),-(height-height*0.32)*sin(radians(iAngle))); // dibujar linea
+  line(0,0,(height-height*0.32)*cos(radians(angleInt)),-(height-height*0.32)*sin(radians(angleInt))); // dibujar linea
 
   translate(width/2,height-height*0.074);
   line(0,0,(height-height*0.32)*cos(radians(angleInt)),-(height-height*0.32)*sin(radians(angleInt)));
