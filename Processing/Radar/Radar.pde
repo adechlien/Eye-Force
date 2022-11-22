@@ -111,19 +111,28 @@ void draw() {
 }
 
 // Arduino
-void serialEvent (Serial myPort) { // starts reading data from the Serial Port 
-  // reads the data from the Serial Port up to the character '.' and puts it into the String variable "data". 
-  port = myPort.readStringUntil('.'); 
+void serialEvent (Serial myPort) { // recibe los datso del puerto  
+  port = myPort.readStringUntil('.'); // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
   port = port.substring(0,port.length()-1); 
-  index1 = port.indexOf(","); // find the character ',' and puts it into the variable "index1" 
-  angle= port.substring(0, index1); // read the data from position "0" to position of the variable index1 or thats the value of the angle the Arduino Board sent into the Serial Port 
-  distance= port.substring(index1+1, port.length()); // read the data from position "index1" to the end of the data pr thats the value of the distance 
-  // converts the String variables into Integer 
+  index1 = port.indexOf(","); // se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
+  angle= port.substring(0, index1); // lee desde el inicio hasta un lugar antes de la coma, es decir, el ángulo
+  distance= port.substring(index1+1, port.length()); // lee desde un caracter despues de la coma y hasta el final, es decir, la distancia en cm 
+  // conversion de string a entero 
   iAngle = int(angle); 
   iDistance = int(distance);
 } 
 
-// 0. Menu    
+//recursividad 
+void audio_rec(){
+  player.play();
+  if (index1 == 0000){
+    player.pause();
+  } else {
+    audio_rec();
+  }
+}
+
+// Menu    
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
   textSize(26);
@@ -376,7 +385,7 @@ void iconRadar() {
   stroke(0);
 }
 
-// Code taken from "Mouse Arc Tangent", a Processing starting project.
+// codigo tomado de "Mouse Arc Tangent", Processing starting project.
 class Eye {
   int x, y;
   int size;
@@ -515,13 +524,13 @@ void radar() { // semicirculos y lineas estaticas
 
 void redLine() { // linea dinamica roja
   pushMatrix();
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
+  translate(width/2,height-height*0.074); // translación de sistema de coordenadas
   strokeWeight(10);
   stroke(255, 0, 0); // color del borde
-  pixsDistance = iDistance*((height-height*0.1666)*0.025); // covers the distance from the sensor from cm to pixels
-  // limiting the range to 40 cms
+  pixsDistance = iDistance*((height-height*0.1666)*0.025); // conversion de la distancia de c, a pixeles
+  // limitando el rango a 30cm
   if(iDistance<30){
-    // draws the object according to the angle and the distance
+    // dibujar linea
   line(pixsDistance*cos(radians(iAngle)),-pixsDistance*sin(radians(iAngle)),(width-width*0.535)*cos(radians(iAngle)),-(width-width*0.535)*sin(radians(iAngle)));
   }
   popMatrix();
@@ -531,8 +540,8 @@ void radarLine() { // linea dinamica verde
   pushMatrix();
   strokeWeight(4);
   stroke(255);
-  translate(width/2,height-height*0.074); // moves the starting coordinats to new location
-  line(0,0,(height-height*0.32)*cos(radians(iAngle)),-(height-height*0.32)*sin(radians(iAngle))); // draws the line according to the angle
+  translate(width/2,height-height*0.074); // translación de sistema de coordenadas
+  line(0,0,(height-height*0.32)*cos(radians(iAngle)),-(height-height*0.32)*sin(radians(iAngle))); // dibujar linea
   popMatrix();
 }
 
