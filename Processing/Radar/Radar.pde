@@ -108,6 +108,27 @@ void draw() {
         }
         backButton(backText);
         historyTable(hisText);
+        fill(0);
+        time[0] = "aaaaaa";
+        text(time[0], 60, 130, 120, 30);
+        time[1] = "bbbbbb";
+        text(time[1], 190, 130, 120, 30);
+        time[2] = "cccccc";
+        text(time[2], 325, 130, 120, 30);
+        time[3] = "dddddd";
+        text(time[3], 450, 130, 120, 30);
+        time[4] = "eeeeee";
+        text(time[4], 585, 130, 120, 30);
+        time[5] = "ffffff";
+        text(time[5], 60, 205, 120, 30);
+        time[6] = "gggggg";
+        text(time[6], 190, 205, 120, 30);
+        time[7] = "hhhhhh";
+        text(time[7], 325, 205, 120, 30);
+        time[8] = "iiiiii";
+        text(time[8], 450, 205, 120, 30);
+        time[9] = "jjjjjj";
+        text(time[9], 585, 205, 120, 30);
         break;
     }
 }
@@ -124,9 +145,14 @@ void serialEvent (Serial myPort) {
   if (distanceInt > 30) {
     player.pause();
   } else {
-    player.play();   
-    time[i] = hour() + ":" + minute() + ":" + second();
-    text(time[i], width/2, height/2, 120, 30);
+    player.play();
+    time[0] = "aaaaaa";
+    text(time[0], width/2, height/2, 120, 30);
+    //time[i] = hour() + ":" + minute() + ":" + second();
+    //text(time[i], width/2, height/2, 120, 30);
+    //if (i == 9){
+    //  i = 0;
+    //}
   }
 }
 
@@ -140,6 +166,15 @@ void alarm() {
      player.play();
    }
  }
+}
+
+void audioRec() {
+  player.play();
+  if (password == "0000") {
+    player.pause();
+  } else {
+    audioRec();
+  }
 }
 
 // 0. Menu    
@@ -616,16 +651,12 @@ void passwordBoard() {
 
 void setDigit(boolean p, int dX) { 
   if ((mouseX > width - 150) && (mouseX < width - 115) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    p = true;
+    text("1", dX, 40, 30, 35);
   } else if ((mouseX > width - 110) && (mouseX < width - 75) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
     text("2", dX, 40, 30, 35);
   } else if ((mouseX > width - 70) && (mouseX < width - 35) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
     text("3", dX, 40, 30, 35);
   }
-  
-  if (p) {
-      text("1", dX, 40, 30, 35);
-    }
 }
 
 // 3. Credits
