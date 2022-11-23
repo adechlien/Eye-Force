@@ -18,7 +18,7 @@ String language = "ES", password = "  ", angle = "", distance = "", port = "", p
 boolean on = false, lgBoard = false, darkMode = false, pb = false, d1 = true, d2 = false, d3 = false, d4 = false, p1 = true, p2 = true, p3 = true, p4 = true;
 float move, dPixels;
 int disposeX, backX, hisX, lgX, op1X, op3X, op4X, useX, dX;
-int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0;  
+int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0 ;  
 String time[] = new String[10];
 void setup(){
   size(720, 500);
@@ -135,7 +135,7 @@ void draw() {
 
 // Arduino
 
-void serialEvent (Serial myPort) {// recibe los datso del puerto 
+void serialEvent (Serial myPort) {// recibe los datos del puerto 
   port = myPort.readStringUntil('.');  // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
   port = port.substring(0,port.length()-1); 
   index = port.indexOf(",");// se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
@@ -146,7 +146,7 @@ void serialEvent (Serial myPort) {// recibe los datso del puerto
   if (distanceInt > 30) {
     player.pause();
   } else {
-<<<<<<< HEAD
+
     player.play();
     time[0] = "aaaaaa";
     text(time[0], width/2, height/2, 120, 30);
@@ -155,7 +155,7 @@ void serialEvent (Serial myPort) {// recibe los datso del puerto
     //if (i == 9){
     //  i = 0;
     //}
-=======
+
     player.play();   
     time[i] = hour() + ":" + minute() + ":" + second();
     i = i +1;
@@ -163,7 +163,7 @@ void serialEvent (Serial myPort) {// recibe los datso del puerto
     if (i == 9){
        i = 0;
     }
->>>>>>> ab19bb562ea4af8dc8366901edc5f334899e9a97
+
   }
 }
 
@@ -179,7 +179,7 @@ void alarm() {
  }
 }
 
-<<<<<<< HEAD
+//recursividad aplicada
 void audioRec() {
   player.play();
   if (password == "0000") {
@@ -190,20 +190,11 @@ void audioRec() {
 }
 
 // 0. Menu    
-=======
 
-//recursividad 
-void audio_rec(){
-  player.play();
-  if (int(password)== 0000){
-    player.pause();
-  } else {
-    audio_rec();
-  }
-}
+
 
 // Menu    
->>>>>>> ab19bb562ea4af8dc8366901edc5f334899e9a97
+
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
   textSize(26);
@@ -667,39 +658,73 @@ void passwordBoard() {
     text("8", width - 99, 160, 35, 40);
     text("9", width - 59, 160, 35, 40);
     text("0", width - 99, 200, 35, 40);
+    
+   
+    
+     
+     
+    
+    if (keyPressed){
+     
+      if (key == '1'){
+      a = 1;
+    }
+    else if (key == '2'){
+      a = 2;
+    }
+    else if (key == '3'){
+      a= 3;
+    }else if (key == '4'){
+      a = 4;
+    }else if (key == '5'){
+      a = 5;}
+    else if (key == '6'){
+      a = 6;
+    }else if (key == '7'){
+      a = 7;
+    }else if (key == '8'){
+      a = 8;
+    }else if (key == '9'){
+      a= 9;
+    }else if (key == '0'){
+      a= 0;
+    }}
+    
+    
+    if (d1){
+    dd1 = a;
+  
   }
-  // Function
-  fill(200, 30, 30);
-  if (d1) {
-    dX = width - 135;
-    d1 = false;
-    d2 = true;
-    setDigit(p1, dX);
-  } else if (d2) {
-    dX = width - 130;
-    d2 = false;
-    d3 = true;
-    setDigit(p2, dX);
-  } else if (d3) {
-    dX = width - 125;
-    d3 = false;
-    d4 = true;
-    setDigit(p3, dX);
-  } else if (d4) {
-    dX = width - 120;
-    setDigit(p4, dX);
+    else if (a!=dd1){
+    dd2 = a;
   }
+  else if (a!=dd1&& a!=dd2){
+    dd3 = a;
+  }
+  else if (a!=dd1&& a!=dd2&& a!=dd3){
+    dd4 = a;
+
+  }
+     String c1 = String.valueOf(dd1);
+     String c2 = String.valueOf(dd2);
+     String c3 = String.valueOf(dd3);
+     String c4 = String.valueOf(dd4);
+     if (dd1!=0){
+      String ca = c1+c2+c3+c4;
+      int cai = Integer.parseInt(ca);
+       text(cai, width - 135, 55);
+       
+    }
+     
+     
+     
+       
+    
+   
+  }
+  
 }
 
-void setDigit(boolean p, int dX) { 
-  if ((mouseX > width - 150) && (mouseX < width - 115) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    text("1", dX, 40, 30, 35);
-  } else if ((mouseX > width - 110) && (mouseX < width - 75) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    text("2", dX, 40, 30, 35);
-  } else if ((mouseX > width - 70) && (mouseX < width - 35) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    text("3", dX, 40, 30, 35);
-  }
-}
 
 // 3. Credits
 void creditsPanel() {
