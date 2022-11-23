@@ -134,17 +134,19 @@ void draw() {
 }
 
 // Arduino
-void serialEvent (Serial myPort) {
-  port = myPort.readStringUntil('.'); 
+
+void serialEvent (Serial myPort) {// recibe los datso del puerto 
+  port = myPort.readStringUntil('.');  // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
   port = port.substring(0,port.length()-1); 
-  index = port.indexOf(",");
-  angle= port.substring(0, index); 
-  distance= port.substring(index + 1, port.length());
-  angleInt = int(angle); 
+  index = port.indexOf(",");// se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
+  angle= port.substring(0, index); // lee desde el inicio hasta un lugar antes de la coma, es decir, el ángulo
+  distance= port.substring(index + 1, port.length());// lee desde un caracter despues de la coma y hasta el final, es decir, la distancia en cm 
+  angleInt = int(angle); // conversion de string a entero 
   distanceInt = int(distance);
   if (distanceInt > 30) {
     player.pause();
   } else {
+<<<<<<< HEAD
     player.play();
     time[0] = "aaaaaa";
     text(time[0], width/2, height/2, 120, 30);
@@ -153,6 +155,15 @@ void serialEvent (Serial myPort) {
     //if (i == 9){
     //  i = 0;
     //}
+=======
+    player.play();   
+    time[i] = hour() + ":" + minute() + ":" + second();
+    i = i +1;
+    text(time[i], width/2, height/2, 120, 30);
+    if (i == 9){
+       i = 0;
+    }
+>>>>>>> ab19bb562ea4af8dc8366901edc5f334899e9a97
   }
 }
 
@@ -168,6 +179,7 @@ void alarm() {
  }
 }
 
+<<<<<<< HEAD
 void audioRec() {
   player.play();
   if (password == "0000") {
@@ -178,6 +190,20 @@ void audioRec() {
 }
 
 // 0. Menu    
+=======
+
+//recursividad 
+void audio_rec(){
+  player.play();
+  if (int(password)== 0000){
+    player.pause();
+  } else {
+    audio_rec();
+  }
+}
+
+// Menu    
+>>>>>>> ab19bb562ea4af8dc8366901edc5f334899e9a97
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
   textSize(26);
@@ -449,7 +475,7 @@ void iconRadar() {
   stroke(0);
 }
 
-// Code taken from "Mouse Arc Tangent", a Processing starting project.
+// codigo tomado de "Mouse Arc Tangent", Processing starting project.
 class Eye {
   int x, y;
   int size;
@@ -561,6 +587,16 @@ void radar() {
 
 void redLine() {
   pushMatrix();
+
+  translate(width/2,height-height*0.074); // translación de sistema de coordenadas
+  strokeWeight(10);
+  stroke(255, 0, 0); // color del borde
+  float distPix = distanceInt*((height-height*0.1666)*0.025); // conversion de la distancia de c, a pixeles
+  // limitando el rango a 30cm
+  if(distanceInt<30){
+    // dibujar linea
+  line(distPix*cos(radians(angleInt)),-distPix*sin(radians(angleInt)),(width-width*0.535)*cos(radians(angleInt)),-(width-width*0.535)*sin(radians(angleInt)));
+
   delay(0);
   translate(width/2,height-height*0.074);
   strokeWeight(10);
@@ -568,17 +604,23 @@ void redLine() {
   dPixels = distanceInt*((height-height*0.1666)*0.025);
   if(distanceInt<30){
   line(dPixels*cos(radians(angleInt)),-dPixels*sin(radians(angleInt)),(width-width*0.535)*cos(radians(angleInt)),-(width-width*0.535)*sin(radians(angleInt)));
+
   }
   popMatrix();
-}
+}}
 
 void radarLine() {
   pushMatrix();
   delay(0);
   strokeWeight(4);
   stroke(255);
+
+  translate(width/2,height-height*0.074); // translación de sistema de coordenadas
+  line(0,0,(height-height*0.32)*cos(radians(angleInt)),-(height-height*0.32)*sin(radians(angleInt))); // dibujar linea
+
   translate(width/2,height-height*0.074);
   line(0,0,(height-height*0.32)*cos(radians(angleInt)),-(height-height*0.32)*sin(radians(angleInt)));
+
   popMatrix();
 }
 
