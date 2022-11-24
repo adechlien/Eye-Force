@@ -13,17 +13,13 @@ Minim minim;
 AudioPlayer player;
 PFont font;
 PImage icon, photo, moonIcon, sunIcon, owl2, inst;
-String time[] = new String[10];
+String time[][] = {{"", "", "", "", ""}, {"", "", "", "", ""}}, pass = "3254";
 String language = "ES", password = "  ", angle = "", distance = "", port = "", put = "";
 String op1, op2 = "Radar", op3, op4, disposeText, backText, hisText, lgText, useText, pText;
 boolean on = false, lgBoard = false, darkMode = false, pb = false, d1 = true, d2 = false, d3 = false, d4 = false, p1 = true, p2 = true, p3 = true, p4 = true;
-int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0 ;
+int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, j = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0, num1 = -1, num2 = -1, num3 = -1, num4 = -1;
 int disposeX, backX, hisX, lgX, op1X, op3X, op4X, useX, dX, pX;
 float move, dPixels;
-
-//j
-int num1 = -1, num2 = -1, num3 = -1, num4 = -1;
-String pass = "3254";
 
 void setup() {
   size(720, 500);
@@ -117,27 +113,7 @@ void draw() {
     }
     backButton(backText);
     historyTable(hisText);
-    fill(0);
-    time[0] = "6:2:29";
-    text(time[0], 60, 130, 120, 30);
-    time[1] = "8:27:47";
-    text(time[1], 190, 130, 120, 30);
-    time[2] = "8:32:51";
-    text(time[2], 325, 130, 120, 30);
-    time[3] = "9:12:4";
-    text(time[3], 450, 130, 120, 30);
-    time[4] = "10:14:21";
-    text(time[4], 585, 130, 120, 30);
-    time[5] = "11:23:48";
-    text(time[5], 60, 205, 120, 30);
-    time[6] = "11:24:1";
-    text(time[6], 190, 205, 120, 30);
-    time[7] = "11:27:11";
-    text(time[7], 325, 205, 120, 30);
-    time[8] = "13:26:57";
-    text(time[8], 450, 205, 120, 30);
-    time[9] = "16:42:13";
-    text(time[9], 585, 205, 120, 30);
+    hours();
     break;
   }
 }
@@ -157,16 +133,13 @@ void serialEvent (Serial myPort) {// recibe los datos del puerto
     player.pause();
   } else {
     player.play();
-    //time[i] = hour() + ":" + minute() + ":" + second();
-    //text(time[i], width/2, height/2, 120, 30);
-    //if (i == 9){
-    //  i = 0;
-    //}
-    player.play();
-    time[i] = hour() + ":" + minute() + ":" + second();
-    i = i +1;
-    text(time[i], width/2, height/2, 120, 30);
-    if (i == 9) {
+    time[i][j] = hour() + ":" + minute() + ":" + second();
+    j = j +1;
+    if (j == 9) {
+      j = 0;
+      i = i +1;
+    }
+    if(i == 2) {
       i = 0;
     }
   }
@@ -187,7 +160,7 @@ void alarm() {
 //recursividad aplicada
 void audioRec() {
   player.play();
-  if (password == "0000") {
+  if (password == "3254") {
     player.pause();
   } else {
     audioRec();
@@ -195,7 +168,6 @@ void audioRec() {
 }
 
 // 0. Menu
-
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
   textSize(26);
@@ -674,6 +646,30 @@ void historyTable(String hisText) {
   line(25, 175, 695, 175);
   // Owl
   image(owl2, width/2 - 150, 260);
+}
+
+void hours() {
+  fill(0);
+  time[0][0] = "6:2:29";
+  time[0][1] = "8:27:47";
+  time[0][2] = "8:32:51";
+  time[0][3] = "9:12:4";
+  time[0][4] = "10:14:21";
+  time[1][0] = "11:23:48";
+  time[1][1] = "11:24:1";
+  time[1][2] = "11:27:11";
+  time[1][3] = "13:26:57";
+  time[1][4] = "16:42:13";
+  i = 0;
+  j = 0;
+  for(int k = 130; k <= 205; k+=75) {
+    for(int m = 60; m <= 585; m+=130) {
+      text(time[i][j], m, k, 120, 30);
+      j++;
+    }
+    i++;
+    j = 0;
+  }
 }
 
 void backButton(String backText) {
