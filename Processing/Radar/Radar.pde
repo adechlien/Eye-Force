@@ -12,13 +12,13 @@ Eye e1, e2;
 Minim minim;
 AudioPlayer player;
 PFont font;
-PImage icon, photo, moonIcon, sunIcon, owl2, inst;
+PImage icon, photo, moonIcon, sunIcon, owl2, inst, desc;
 String time[][] = {{"", "", "", "", ""}, {"", "", "", "", ""}}, pass = "3254";
 String language = "ES", password = "  ", angle = "", distance = "", port = "", put = "";
 String op1, op2 = "Radar", op3, op4, disposeText, backText, hisText, lgText, useText, pText;
 boolean on = false, lgBoard = false, darkMode = false, pb = false, d1 = true, d2 = false, d3 = false, d4 = false, p1 = true, p2 = true, p3 = true, p4 = true;
 int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, j = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0, num1 = -1, num2 = -1, num3 = -1, num4 = -1;
-int disposeX, backX, hisX, lgX, op1X, op3X, op4X, useX, dX, pX;
+int disposeX, backX, hisX, lgX, op1X, op3X, op4X = 590, useX, dX, pX;
 float move, dPixels;
 
 void setup() {
@@ -32,6 +32,7 @@ void setup() {
   sunIcon = loadImage("images/sun.png");
   owl2 = loadImage("images/staticOwl.png");
   inst = loadImage("images/inst.png");
+  desc = loadImage("images/desc.png");
   surface.setIcon(icon);
   textFont(font);
   smooth();
@@ -47,8 +48,8 @@ void draw() {
     lgText = "Language";
     disposeText = "Exit";
     op1 = "Instructions";
-    op3 = "Credits";
-    op4 = "History";
+    op3 = "History";
+    op4 = "Description";    
     backText = "Back";
     hisText = "Last 10 alerts";
     useText = "How to use";
@@ -58,8 +59,8 @@ void draw() {
     lgText = "Idioma";
     disposeText = "Salir";
     op1 = "Instrucciones";
-    op3 = "Créditos";
-    op4 = "Historial";
+    op3 = "Historial";
+    op4 = "Descripción";    
     backText = "Atrás";
     hisText = "Últimas 10 alertas";
     useText = "Cómo usar";
@@ -96,16 +97,7 @@ void draw() {
     alarm();
     passwordBoard();
     break;
-  case 3: // Credits
-    if (darkMode) {
-      background(50, 63, 121);
-    } else {
-      background(230, 230, 250);
-    }
-    creditsPanel();
-    backButton(backText);
-    break;
-  case 4: // History
+  case 3: // History    
     if (darkMode) {
       background(50, 63, 121);
     } else {
@@ -114,6 +106,15 @@ void draw() {
     backButton(backText);
     historyTable(hisText);
     hours();
+    break;
+  case 4: // Description
+    if (darkMode) {
+      background(50, 63, 121);
+    } else {
+      background(230, 230, 250);
+    }
+    descPanel();
+    backButton(backText);
     break;
   }
 }
@@ -207,24 +208,16 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   }
   text(op1, op1X, 293, 140, 40);
   text(op2, 632, 293, 90, 40);
+  text(op4, op4X, 353, 120, 40);
   switch (op3) {
-  case "Créditos":
-    op3X = 20;
+  case "Historial":
+    op3X = 15;
     break;
-  case "Credits":
+  case "History":
     op3X = 22;
     break;
   }
-  text(op3, op3X, 353, 90, 40);
-  switch (op4) {
-  case "Historial":
-    op4X = 600;
-    break;
-  case "History":
-    op4X = 605;
-    break;
-  }
-  text(op4, op4X, 353, 140, 40);
+  text(op3, op3X, 353, 140, 40);
   // Exit Button
   fill(255, 203, 47);
   rect(620, 455, 80, 30, 5, 10, 5, 10);
@@ -270,20 +263,20 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   } else {
     cursor(ARROW);
   }
-  // Option 3
-  if ((mouseX > -1) && (mouseX < 119) && (mouseY > 340) && (mouseY < 380)) {
-    cursor(HAND);
-    if (mousePressed) {
-      tab = 3;
-    }
-  } else {
-    cursor(ARROW);
-  }
   // Option 4
   if ((mouseX > 560) && (mouseX < width) && (mouseY > 340) && (mouseY < 380)) {
     cursor(HAND);
     if (mousePressed) {
       tab = 4;
+    }
+  } else {
+    cursor(ARROW);
+  }
+  // Option 3
+  if ((mouseX > -1) && (mouseX < 119) && (mouseY > 340) && (mouseY < 380)) {
+    cursor(HAND);
+    if (mousePressed) {
+      tab = 3;
     }
   } else {
     cursor(ARROW);
@@ -611,9 +604,9 @@ void passwordBoard() {
 }
 
 
-// 3. Credits
-void creditsPanel() {
-  text("", width/2, height/2, 20, 20);
+// 3. Description
+void descPanel() {
+  image(desc, 0, 0);
 }
 
 // 4. History
