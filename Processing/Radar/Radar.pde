@@ -1,185 +1,188 @@
-import static processing.core.PApplet.atan2; 
-import processing.core.PApplet; 
-import processing.core.PFont; 
-import processing.core.PImage; 
+import static processing.core.PApplet.atan2;
+import processing.core.PApplet;
+import processing.core.PFont;
+import processing.core.PImage;
 import processing.serial.*;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import ddf.minim.*;
 Serial myPort;
- 
+
 Eye e1, e2;
 Minim minim;
 AudioPlayer player;
 PFont font;
-PImage icon, photo, moonIcon, sunIcon, owl2;
+PImage icon, photo, moonIcon, sunIcon, owl2, inst;
 String op1, op2 = "Radar", op3, op4, disposeText, backText, hisText, lgText, useText;
 String language = "ES", password = "  ", angle = "", distance = "", port = "", put = "";
 boolean on = false, lgBoard = false, darkMode = false, pb = false, d1 = true, d2 = false, d3 = false, d4 = false, p1 = true, p2 = true, p3 = true, p4 = true;
 float move, dPixels;
 int disposeX, backX, hisX, lgX, op1X, op3X, op4X, useX, dX;
-int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0;  
+int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0 ;
 String time[] = new String[10];
-void setup(){
+
+//j
+int num1 = -1, num2 = -1, num3 = -1, num4 = -1;
+String pass = "3254";
+
+void setup() {
   size(720, 500);
   e1 = new Eye(290, 155, 85);
   e2 = new Eye(430, 155, 85);
-  icon = loadImage("images/icon.png"); 
-  font = loadFont("fontThree.vlw"); 
-  photo = loadImage("images/owl.png"); 
-  moonIcon = loadImage("images/moon.png"); 
+  icon = loadImage("images/icon.png");
+  font = loadFont("fontThree.vlw");
+  photo = loadImage("images/owl.png");
+  moonIcon = loadImage("images/moon.png");
   sunIcon = loadImage("images/sun.png");
   owl2 = loadImage("images/staticOwl.png");
-  surface.setIcon(icon); 
+  inst = loadImage("images/inst.png");
+  surface.setIcon(icon);
   textFont(font);
   smooth();
   minim = new Minim(this);
   player = minim.loadFile("sonido.wav");
-  //myPort = new Serial(this,"COM3", 9600);
+  //myPort = new Serial(this,"COM5", 9600);
   //myPort.bufferUntil('.');
-} 
+}
 
 void draw() {
   switch (language) {
-    case "EN":
-      lgText = "Language";
-      disposeText = "Exit";
-      op1 = "Instructions";
-      op3 = "Credits";
-      op4 = "History";
-      backText = "Back";
-      hisText = "Last 10 alerts";
-      useText = "How to use";
-      break;
-    case "ES":
-      lgText = "Idioma";
-      disposeText = "Salir";
-      op1 = "Instrucciones";
-      op3 = "Créditos";
-      op4 = "Historial";
-      backText = "Atrás";
-      hisText = "Últimas 10 alertas";
-      useText = "Cómo usar";
-      break;            
+  case "EN":
+    lgText = "Language";
+    disposeText = "Exit";
+    op1 = "Instructions";
+    op3 = "Credits";
+    op4 = "History";
+    backText = "Back";
+    hisText = "Last 10 alerts";
+    useText = "How to use";
+    break;
+  case "ES":
+    lgText = "Idioma";
+    disposeText = "Salir";
+    op1 = "Instrucciones";
+    op3 = "Créditos";
+    op4 = "Historial";
+    backText = "Atrás";
+    hisText = "Últimas 10 alertas";
+    useText = "Cómo usar";
+    break;
+  }
+  switch (tab) {
+  case 0: // Menu
+    if (darkMode) {
+      background(50, 63, 121);
+    } else {
+      background(230, 230, 250);
     }
-    switch (tab) {
-      case 0: // Menu
-        if (darkMode) {
-          background(50, 63, 121);
-        } else {
-          background(230, 230, 250);
-        }        
-        mainMenu(disposeText, op1, op2, op3, op4);
-        languageSelection();
-        animation();
-        iconRadar();
-        break;
-      case 1: // Instructions
-        if (darkMode) {
-          background(50, 63, 121);
-        } else {
-          background(230, 230, 250);
-        }
-        infoPage(backText);
-        break;
-      case 2: // Radar
-        radarBg();
-        radar();
-        redLine();
-        radarLine();
-        backButton(backText);
-        alarm();
-        passwordBoard();
-        break;
-      case 3: // Credits
-        if (darkMode) {
-          background(50, 63, 121);
-        } else {
-          background(230, 230, 250);
-        }
-        creditsPanel();
-        backButton(backText);
-        break;
-      case 4: // History
-        if (darkMode) {
-          background(50, 63, 121);
-        } else {
-          background(230, 230, 250);
-        }
-        backButton(backText);
-        historyTable(hisText);
-        fill(0);
-        time[0] = "aaaaaa";
-        text(time[0], 60, 130, 120, 30);
-        time[1] = "bbbbbb";
-        text(time[1], 190, 130, 120, 30);
-        time[2] = "cccccc";
-        text(time[2], 325, 130, 120, 30);
-        time[3] = "dddddd";
-        text(time[3], 450, 130, 120, 30);
-        time[4] = "eeeeee";
-        text(time[4], 585, 130, 120, 30);
-        time[5] = "ffffff";
-        text(time[5], 60, 205, 120, 30);
-        time[6] = "gggggg";
-        text(time[6], 190, 205, 120, 30);
-        time[7] = "hhhhhh";
-        text(time[7], 325, 205, 120, 30);
-        time[8] = "iiiiii";
-        text(time[8], 450, 205, 120, 30);
-        time[9] = "jjjjjj";
-        text(time[9], 585, 205, 120, 30);
-        break;
+    mainMenu(disposeText, op1, op2, op3, op4);
+    languageSelection();
+    animation();
+    iconRadar();
+    break;
+  case 1: // Instructions
+    if (darkMode) {
+      background(50, 63, 121);
+    } else {
+      background(230, 230, 250);
     }
+    infoPage();
+    backButton(backText);
+    break;
+  case 2: // Radar
+    radarBg();
+    radar();
+    redLine();
+    radarLine();
+    backButton(backText);
+    alarm();
+    passwordBoard();
+    break;
+  case 3: // Credits
+    if (darkMode) {
+      background(50, 63, 121);
+    } else {
+      background(230, 230, 250);
+    }
+    creditsPanel();
+    backButton(backText);
+    break;
+  case 4: // History
+    if (darkMode) {
+      background(50, 63, 121);
+    } else {
+      background(230, 230, 250);
+    }
+    backButton(backText);
+    historyTable(hisText);
+    fill(0);
+    time[0] = "6:2:29";
+    text(time[0], 60, 130, 120, 30);
+    time[1] = "8:27:47";
+    text(time[1], 190, 130, 120, 30);
+    time[2] = "8:32:51";
+    text(time[2], 325, 130, 120, 30);
+    time[3] = "9:12:4";
+    text(time[3], 450, 130, 120, 30);
+    time[4] = "10:14:21";
+    text(time[4], 585, 130, 120, 30);
+    time[5] = "11:23:48";
+    text(time[5], 60, 205, 120, 30);
+    time[6] = "11:24:1";
+    text(time[6], 190, 205, 120, 30);
+    time[7] = "11:27:11";
+    text(time[7], 325, 205, 120, 30);
+    time[8] = "13:26:57";
+    text(time[8], 450, 205, 120, 30);
+    time[9] = "16:42:13";
+    text(time[9], 585, 205, 120, 30);
+    break;
+  }
 }
 
 // Arduino
-
-void serialEvent (Serial myPort) {// recibe los datso del puerto 
+void serialEvent (Serial myPort) {// recibe los datos del puerto
+  println(myPort);
+  println(myPort.readStringUntil('.'));
   port = myPort.readStringUntil('.');  // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
-  port = port.substring(0,port.length()-1); 
+  port = port.substring(0, port.length()-1);
   index = port.indexOf(",");// se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
   angle= port.substring(0, index); // lee desde el inicio hasta un lugar antes de la coma, es decir, el ángulo
-  distance= port.substring(index + 1, port.length());// lee desde un caracter despues de la coma y hasta el final, es decir, la distancia en cm 
-  angleInt = int(angle); // conversion de string a entero 
+  distance= port.substring(index + 1, port.length());// lee desde un caracter despues de la coma y hasta el final, es decir, la distancia en cm
+  angleInt = int(angle); // conversion de string a entero
   distanceInt = int(distance);
   if (distanceInt > 30) {
     player.pause();
   } else {
-<<<<<<< HEAD
     player.play();
-    time[0] = "aaaaaa";
-    text(time[0], width/2, height/2, 120, 30);
     //time[i] = hour() + ":" + minute() + ":" + second();
     //text(time[i], width/2, height/2, 120, 30);
     //if (i == 9){
     //  i = 0;
     //}
-=======
-    player.play();   
+    player.play();
     time[i] = hour() + ":" + minute() + ":" + second();
     i = i +1;
     text(time[i], width/2, height/2, 120, 30);
-    if (i == 9){
-       i = 0;
+    if (i == 9) {
+      i = 0;
     }
->>>>>>> ab19bb562ea4af8dc8366901edc5f334899e9a97
   }
 }
 
 // Alarm
 void alarm() {
- if (player.isPlaying()) {
-   if (password == "2904") {
-     player.pause();
-     password = ""; 
-   } else {
-     player.play();
-   }
- }
+  if (player.isPlaying()) {
+    if (password == "2904") {
+      player.pause();
+      password = "";
+    } else {
+      player.play();
+    }
+  }
 }
 
-<<<<<<< HEAD
+//recursividad aplicada
 void audioRec() {
   player.play();
   if (password == "0000") {
@@ -189,21 +192,12 @@ void audioRec() {
   }
 }
 
-// 0. Menu    
-=======
+// 0. Menu
 
-//recursividad 
-void audio_rec(){
-  player.play();
-  if (int(password)== 0000){
-    player.pause();
-  } else {
-    audio_rec();
-  }
-}
 
-// Menu    
->>>>>>> ab19bb562ea4af8dc8366901edc5f334899e9a97
+
+// Menu
+
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
   textSize(26);
@@ -216,15 +210,15 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   // Date and Hour
   textSize(18);
   text(String.valueOf(day()) + "/" + String.valueOf(month()) + "/" + String.valueOf(year())
-  + " - " + String.valueOf(hour()) + ":" + String.valueOf(minute()) + ":"
-  + String.valueOf(second()), 15, 475, 250, 30);
+    + " - " + String.valueOf(hour()) + ":" + String.valueOf(minute()) + ":"
+    + String.valueOf(second()), 15, 475, 250, 30);
   // Buttons
   strokeWeight(2);
   textSize(20);
   // Left Buttons
   rect(-1, height/2 + 30, 160, 40, 0, 5, 15, 0);
   rect(-1, height/2 + 90, 120, 40, 0, 5, 15, 0);
-  // Right Buttons        
+  // Right Buttons
   rect(width - 120, 280, 120, 40, 15, 0, 0, 5);
   rect(width - 160, 340, 160, 40, 15, 0, 0, 5);
   if (darkMode) {
@@ -234,31 +228,31 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   }
   // Texts
   switch (op1) {
-    case "Instrucciones":
-      op1X = 20;
-      break;
-    case "Instructions":
-      op1X = 24;
-      break;
+  case "Instrucciones":
+    op1X = 20;
+    break;
+  case "Instructions":
+    op1X = 24;
+    break;
   }
   text(op1, op1X, 293, 140, 40);
   text(op2, 632, 293, 90, 40);
   switch (op3) {
-    case "Créditos":
-      op3X = 20;
-      break;
-    case "Credits":
-      op3X = 22;
-      break;
+  case "Créditos":
+    op3X = 20;
+    break;
+  case "Credits":
+    op3X = 22;
+    break;
   }
-  text(op3, op3X, 353, 90, 40);  
+  text(op3, op3X, 353, 90, 40);
   switch (op4) {
-    case "Historial":
-      op4X = 600;
-      break;
-    case "History":
-      op4X = 605;
-      break;
+  case "Historial":
+    op4X = 600;
+    break;
+  case "History":
+    op4X = 605;
+    break;
   }
   text(op4, op4X, 353, 140, 40);
   // Exit Button
@@ -341,12 +335,12 @@ void languageSelection() {
   textSize(16);
   fill(0);
   switch (lgText) {
-    case "Language":
-      lgX = 45;
-      break;
-    case "Idioma":
-      lgX = 55;
-      break;
+  case "Language":
+    lgX = 45;
+    break;
+  case "Idioma":
+    lgX = 55;
+    break;
   }
   text(lgText, lgX, 40, 100, 20);
   // Function
@@ -354,7 +348,7 @@ void languageSelection() {
     lgBoard = true;
   } else if (!((mouseX > 30) && (mouseX < 130) && (mouseY > 30) && (mouseY < 130))) {
     lgBoard = false;
-  }        
+  }
   if (lgBoard) {
     fill(0);
     rect(30, 65, 65, 60, 5, 10, 10, 10);
@@ -390,7 +384,7 @@ void languageSelection() {
     // Yellow
     strokeWeight(0);
     fill(252, 223, 0);
-    rect(32, 104, 62, 12);            
+    rect(32, 104, 62, 12);
     // Border
     noFill();
     stroke(3);
@@ -414,7 +408,7 @@ void languageSelection() {
         if (mousePressed) {
           language = "ES";
         }
-      }                                    
+      }
     }
   }
 }
@@ -448,28 +442,28 @@ void iconRadar() {
   }
   noFill();
   strokeWeight(2);
-  for(int i = 25; i <= 75; i+= 25) {
+  for (int i = 25; i <= 75; i+= 25) {
     ellipse(width / 2, width / 2, i, i);
-  }        
+  }
   line(width / 2, 300, width / 2, 420);
-  line(300, width / 2, 420, width / 2);        
+  line(300, width / 2, 420, width / 2);
   line(340, 340, 345, 345);
   line(375, 345, 380, 340);
   line(375, 375, 380, 380);
   line(340, 380, 345, 375);
-        
+
   strokeWeight(4);
   ellipse(width / 2, width / 2, 100, 100);
   line(310, width / 2, 320, width / 2);
   line(400, width / 2, 410, width / 2);
   line(width / 2, 310, width / 2, 320);
   line(width / 2, 400, width / 2, 410);
-        
+
   line(325, 325, 330, 330);
   line(395, 325, 390, 330);
   line(325, 395, 330, 390);
   line(395, 395, 390, 390);
-       
+
   stroke(240, 20, 20);
   line(width / 2, width / 2, width / 2, 310);
   stroke(0);
@@ -480,7 +474,7 @@ class Eye {
   int x, y;
   int size;
   float angle = (float) 0.0;
-  
+
   Eye(int tx, int ty, int ts) {
     x = tx;
     y = ty;
@@ -500,49 +494,16 @@ class Eye {
     fill(20);
     ellipse(size / 4, 0, size / 2, size / 2);
     popMatrix();
-    }
+  }
 }
 
 // 1. Instructions
-void infoPage(String backText) {
-  if (darkMode) {
-    fill(229);
-  } else {
-    fill(50, 63, 121);
-  }
-  // Title
-  textSize(25);
-  text(useText, 300, 15, 240, 40);
-  rect(20, 40, 680, 440, 5, 10, 5, 10);
-  // Back Button
-  stroke(0);
-  strokeWeight(2);
-  fill(255, 203, 47);
-  rect(20, 450, 85, 30, 5, 10, 5, 10);
-  fill(0);
-  textSize(16);
-  text(backText, 42, 460, 70, 20);
-  // Explanation
-  if (darkMode) {
-    fill(50, 63, 121);
-  } else {
-    fill(229);
-  }
-  textSize(22);
-  text("To start the radar, click on Radar Button", 40, 80);
-  // Changes 
-  if ((mouseX > 20) && (mouseX < 105) && (mouseY > 450) && (mouseY < 480)) {
-    cursor(HAND);
-    if (mousePressed) {
-      tab = 0;
-    }
-  } else {
-    cursor(ARROW);
-  }
+void infoPage() {
+  image(inst, 0, 0);
 }
 
 // 2. Radar
-void radarBg(){
+void radarBg() {
   noFill();
   stroke(14);
   strokeWeight(80);
@@ -550,33 +511,33 @@ void radarBg(){
   noStroke();
   fill(14);
   rect(0, 0, width, 124);
-  rect(0, 465, width, 500);        
+  rect(0, 465, width, 500);
   rect(0, 0, 20, 500, 10);
   rect(700, 0, 20, 500);
   rect(20, 124, 50, 100);
   rect(650, 124, 50, 100);
   rect(60, 110, 60, 60);
   rect(600, 100, 60, 70);
-  fill(0, 9);         
-  rect(0, 0, width, height); 
-  fill(46, 125, 85); 
+  fill(0, 9);
+  rect(0, 0, width, height);
+  fill(46, 125, 85);
 }
 
 void radar() {
   pushMatrix();
-  translate(width/2,height-height*0.074);
+  translate(width/2, height-height*0.074);
   noFill();
   strokeWeight(1);
   stroke(255);
-  arc(0,0,(width-width*0.27),(width-width*0.27),PI,TWO_PI);
-  arc(0,0,(width-width*0.479),(width-width*0.479),PI,TWO_PI);
-  arc(0,0,(width-width*0.687),(width-width*0.687),PI,TWO_PI);
+  arc(0, 0, (width-width*0.27), (width-width*0.27), PI, TWO_PI);
+  arc(0, 0, (width-width*0.479), (width-width*0.479), PI, TWO_PI);
+  arc(0, 0, (width-width*0.687), (width-width*0.687), PI, TWO_PI);
   line(-120, -120, -150, -150);
   line(120, -120, 150, -150);
-  line(0,0,(-width/2)*cos(radians(90)),(-width/2 + 22)*sin(radians(90)));
+  line(0, 0, (-width/2)*cos(radians(90)), (-width/2 + 22)*sin(radians(90)));
   strokeWeight(5);
-  arc(0,0,(width-width*0.0625),(width-width*0.0625),PI,TWO_PI);
-  line(0, (-width/2 + 22)*sin(radians(90)), 0,(-width/2 + 60)*sin(radians(90)));
+  arc(0, 0, (width-width*0.0625), (width-width*0.0625), PI, TWO_PI);
+  line(0, (-width/2 + 22)*sin(radians(90)), 0, (-width/2 + 60)*sin(radians(90)));
   line(-width/2 + 22, 0, width/2 - 22, 0);
   line(-218, -218, -238, -238);
   line(218, -218, 238, -238);
@@ -588,26 +549,26 @@ void radar() {
 void redLine() {
   pushMatrix();
 
-  translate(width/2,height-height*0.074); // translación de sistema de coordenadas
+  translate(width/2, height-height*0.074); // translación de sistema de coordenadas
   strokeWeight(10);
   stroke(255, 0, 0); // color del borde
   float distPix = distanceInt*((height-height*0.1666)*0.025); // conversion de la distancia de c, a pixeles
   // limitando el rango a 30cm
-  if(distanceInt<30){
+  if (distanceInt<30) {
     // dibujar linea
-  line(distPix*cos(radians(angleInt)),-distPix*sin(radians(angleInt)),(width-width*0.535)*cos(radians(angleInt)),-(width-width*0.535)*sin(radians(angleInt)));
+    line(distPix*cos(radians(angleInt)), -distPix*sin(radians(angleInt)), (width-width*0.535)*cos(radians(angleInt)), -(width-width*0.535)*sin(radians(angleInt)));
 
-  delay(0);
-  translate(width/2,height-height*0.074);
-  strokeWeight(10);
-  stroke(255, 0, 0);
-  dPixels = distanceInt*((height-height*0.1666)*0.025);
-  if(distanceInt<30){
-  line(dPixels*cos(radians(angleInt)),-dPixels*sin(radians(angleInt)),(width-width*0.535)*cos(radians(angleInt)),-(width-width*0.535)*sin(radians(angleInt)));
-
+    delay(0);
+    translate(width/2, height-height*0.074);
+    strokeWeight(10);
+    stroke(255, 0, 0);
+    dPixels = distanceInt*((height-height*0.1666)*0.025);
+    if (distanceInt<30) {
+      line(dPixels*cos(radians(angleInt)), -dPixels*sin(radians(angleInt)), (width-width*0.535)*cos(radians(angleInt)), -(width-width*0.535)*sin(radians(angleInt)));
+    }
+    popMatrix();
   }
-  popMatrix();
-}}
+}
 
 void radarLine() {
   pushMatrix();
@@ -615,11 +576,11 @@ void radarLine() {
   strokeWeight(4);
   stroke(255);
 
-  translate(width/2,height-height*0.074); // translación de sistema de coordenadas
-  line(0,0,(height-height*0.32)*cos(radians(angleInt)),-(height-height*0.32)*sin(radians(angleInt))); // dibujar linea
+  translate(width/2, height-height*0.074); // translación de sistema de coordenadas
+  line(0, 0, (height-height*0.32)*cos(radians(angleInt)), -(height-height*0.32)*sin(radians(angleInt))); // dibujar linea
 
-  translate(width/2,height-height*0.074);
-  line(0,0,(height-height*0.32)*cos(radians(angleInt)),-(height-height*0.32)*sin(radians(angleInt)));
+  translate(width/2, height-height*0.074);
+  line(0, 0, (height-height*0.32)*cos(radians(angleInt)), -(height-height*0.32)*sin(radians(angleInt)));
 
   popMatrix();
 }
@@ -641,7 +602,7 @@ void passwordBoard() {
   if (pb) {
     fill(229);
     // 1-3
-    rect(width - 150, 70, 35, 35, 10, 10, 10, 10);  
+    rect(width - 150, 70, 35, 35, 10, 10, 10, 10);
     rect(width - 110, 70, 35, 35, 10, 10, 10, 10);
     rect(width - 70, 70, 35, 35, 10, 10, 10, 10);
     //4-6
@@ -659,55 +620,27 @@ void passwordBoard() {
     //text(password, width - 137, 40, 180, 30);
     text("1", width - 139, 80, 35, 40);
     text("2", width - 99, 80, 35, 40);
-    text("3", width - 59, 80, 35, 40);  
+    text("3", width - 59, 80, 35, 40);
     text("4", width - 139, 120, 35, 40);
     text("5", width - 99, 120, 35, 40);
-    text("6", width - 59, 120, 35, 40);  
+    text("6", width - 59, 120, 35, 40);
     text("7", width - 139, 160, 35, 40);
     text("8", width - 99, 160, 35, 40);
     text("9", width - 59, 160, 35, 40);
     text("0", width - 99, 200, 35, 40);
-  }
-  // Function
-  fill(200, 30, 30);
-  if (d1) {
-    dX = width - 135;
-    d1 = false;
-    d2 = true;
-    setDigit(p1, dX);
-  } else if (d2) {
-    dX = width - 130;
-    d2 = false;
-    d3 = true;
-    setDigit(p2, dX);
-  } else if (d3) {
-    dX = width - 125;
-    d3 = false;
-    d4 = true;
-    setDigit(p3, dX);
-  } else if (d4) {
-    dX = width - 120;
-    setDigit(p4, dX);
+
+    text(pass(num1) + pass(num2) + pass(num3) + pass(num4), width - 135, 55);
   }
 }
 
-void setDigit(boolean p, int dX) { 
-  if ((mouseX > width - 150) && (mouseX < width - 115) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    text("1", dX, 40, 30, 35);
-  } else if ((mouseX > width - 110) && (mouseX < width - 75) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    text("2", dX, 40, 30, 35);
-  } else if ((mouseX > width - 70) && (mouseX < width - 35) && (mouseY > 70) && (mouseY < 115) && (mousePressed)) {
-    text("3", dX, 40, 30, 35);
-  }
-}
 
 // 3. Credits
 void creditsPanel() {
-  text("si", width/2, height/2, 20, 20);
+  text("", width/2, height/2, 20, 20);
 }
 
 // 4. History
-void historyTable(String hisText) {        
+void historyTable(String hisText) {
   strokeWeight(2);
   stroke(0);
   if (darkMode) {
@@ -718,12 +651,12 @@ void historyTable(String hisText) {
   textSize(20);
   // Title
   switch (language) {
-    case "ES":
-      hisX = width/2 - 75;
-      break;
-    case "EN":
-      hisX = width/2 - 70;
-      break;
+  case "ES":
+    hisX = width/2 - 75;
+    break;
+  case "EN":
+    hisX = width/2 - 70;
+    break;
   }
   text(hisText, hisX, 65, 180, 50);
   // Table
@@ -733,7 +666,7 @@ void historyTable(String hisText) {
     strokeWeight(1);
     line(i, 100, i, 250);
   }
-  line(25, 175, 695, 175);  
+  line(25, 175, 695, 175);
   // Owl
   image(owl2, width/2 - 150, 260);
 }
@@ -747,15 +680,15 @@ void backButton(String backText) {
   fill(0);
   textSize(16);
   switch (backText) {
-    case "Atrás":
-      backX = 52;
-      break;
-    case "Back":
-      backX = 54;
-      break;
+  case "Atrás":
+    backX = 52;
+    break;
+  case "Back":
+    backX = 54;
+    break;
   }
-  text(backText, backX, 40, 70, 20);  
-  // Changes  
+  text(backText, backX, 40, 70, 20);
+  // Changes
   if ((mouseX > 20) && (mouseX < 90) && (mouseY > 20) && (mouseY < 55)) {
     cursor(HAND);
     if (mousePressed) {
@@ -763,5 +696,25 @@ void backButton(String backText) {
     }
   } else {
     cursor(ARROW);
+  }
+}
+
+void keyPressed() {
+  if (pb) {
+    int number = getNumberEntered();
+
+    if (num1 == -1) num1 = number;
+    else if (num2 == -1) num2 = number;
+    else if (num3 == -1) num3 = number;
+    else if (num4 == -1) num4 = number;
+    //rectificar la validez de la contraseña
+    else if (pass ==  concatPass(num1, num2, num3, num4)) {
+      //LA CONTRASEÑA ES BUENA
+      println("CONTRASEÑA CORRECTA");
+    } else {
+      //LA CONTRASEÑA ES MAlA
+      num1 = num2 = num3 = num4 = -1;
+      println("CONTRASEÑA INCORRECTA");
+    }
   }
 }
