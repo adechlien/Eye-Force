@@ -244,19 +244,16 @@ void iconRadar() {
   line(375, 345, 380, 340);
   line(375, 375, 380, 380);
   line(340, 380, 345, 375);
-
   strokeWeight(4);
   ellipse(width / 2, width / 2, 100, 100);
   line(310, width / 2, 320, width / 2);
   line(400, width / 2, 410, width / 2);
   line(width / 2, 310, width / 2, 320);
   line(width / 2, 400, width / 2, 410);
-
   line(325, 325, 330, 330);
   line(395, 325, 390, 330);
   line(325, 395, 330, 390);
   line(395, 395, 390, 390);
-
   stroke(240, 20, 20);
   line(width / 2, width / 2, width / 2, 310);
   stroke(0);
@@ -403,30 +400,30 @@ void historyTable(String hisText) {
 
 void hours() {
   fill(0);
-  //time[0][0] = "6:2:29";
-  //time[0][1] = "8:27:47";
-  //time[0][2] = "8:32:51";
-  //time[0][3] = "9:12:4";
-  //time[0][4] = "10:14:21";
-  //time[1][0] = "11:23:48";
-  //time[1][1] = "11:24:1";
-  //time[1][2] = "11:27:11";
-  //time[1][3] = "13:26:57";
-  //time[1][4] = "16:42:13";
-  //i = 0;
-  //j = 0;
-  //for(int k = 130; k <= 205; k+=75) {
-  //  for(int m = 60; m <= 585; m+=130) {
-  //    if(j != 0) {
-  //      if(time[i][j] != time[i][j - 1]) {
-  //        text(time[i][j], m, k, 120, 30);
-  //        j++;
-  //      }
-  //    }
-  //  }
-  //  i++;
-  //  j = 0;
-  //}
+  time[0][0] = "6:2:29";
+  time[0][1] = "8:27:47";
+  time[0][2] = "8:32:51";
+  time[0][3] = "9:12:4";
+  time[0][4] = "10:14:21";
+  time[1][0] = "11:23:48";
+  time[1][1] = "11:24:1";
+  time[1][2] = "11:27:11";
+  time[1][3] = "13:26:57";
+  time[1][4] = "16:42:13";
+  i = 0;
+          j = 0;          
+          for(int k = 130; k <= 205; k+=75) {
+            for(int m = 60; m <= 585; m+=130) {
+              //if(j != 0) {
+                //if(time[i][j] != time[i][j - 1]) {
+                  text(time[i][j], m, k, 120, 30);
+                  j++;
+                //}
+              //}
+     }
+     i++;
+     j = 0;
+  }
 }
 void passwordBoard() {
   fill(229);
@@ -467,7 +464,6 @@ void passwordBoard() {
     rect(width - 150, 30, 115, 35, 10, 10, 10, 10);
     fill(50, 63, 121);
     textSize(20);
-    //text(password, width - 137, 40, 180, 30);
     text("1", width - 139, 80, 35, 40);
     text("2", width - 99, 80, 35, 40);
     text("3", width - 59, 80, 35, 40);
@@ -478,7 +474,6 @@ void passwordBoard() {
     text("8", width - 99, 160, 35, 40);
     text("9", width - 59, 160, 35, 40);
     text("0", width - 99, 200, 35, 40);
-
     text(pass(num1) + pass(num2) + pass(num3) + pass(num4), width - 135, 55);
   }
 }

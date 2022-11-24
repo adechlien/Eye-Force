@@ -145,14 +145,9 @@ void audioRec() {
   }
 }
 
-
-
-
-
 void keyPressed() {
   if (pb) {
     int number = getNumberEntered();
-
     if (num1 == -1) num1 = number;
     else if (num2 == -1) num2 = number;
     else if (num3 == -1) num3 = number;
@@ -168,13 +163,7 @@ void keyPressed() {
        println("CONTRASEÑA CORRECTA");
       num1 = num2 = num3 = num4 = -1;
       player.pause();
-      radarBg();
-    radar();
-    redLine();
-    radarLine();
-    backButton(backText);
-    alarm();
-    passwordBoard();
+      
      
     }
   }
