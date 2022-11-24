@@ -660,20 +660,20 @@ void hours() {
   //time[1][2] = "11:27:11";
   //time[1][3] = "13:26:57";
   //time[1][4] = "16:42:13";
-  i = 0;
-  j = 0;
-  for(int k = 130; k <= 205; k+=75) {
-    for(int m = 60; m <= 585; m+=130) {
-      if(j != 0) {
-        if(time[i][j] != time[i][j - 1]) {
-          text(time[i][j], m, k, 120, 30);
-          j++;
-        }
-      }
-    }
-    i++;
-    j = 0;
-  }
+  //i = 0;
+  //j = 0;
+  //for(int k = 130; k <= 205; k+=75) {
+  //  for(int m = 60; m <= 585; m+=130) {
+  //    if(j != 0) {
+  //      if(time[i][j] != time[i][j - 1]) {
+  //        text(time[i][j], m, k, 120, 30);
+  //        j++;
+  //      }
+  //    }
+  //  }
+  //  i++;
+  //  j = 0;
+  //}
 }
 
 void backButton(String backText) {
