@@ -13,17 +13,13 @@ Minim minim;
 AudioPlayer player;
 PFont font;
 PImage icon, photo, moonIcon, sunIcon, owl2, inst;
-String op1, op2 = "Radar", op3, op4, disposeText, backText, hisText, lgText, useText;
-String language = "ES", password = "  ", angle = "", distance = "", port = "", put = "";
-boolean on = false, lgBoard = false, darkMode = false, pb = false, d1 = true, d2 = false, d3 = false, d4 = false, p1 = true, p2 = true, p3 = true, p4 = true;
-float move, dPixels;
-int disposeX, backX, hisX, lgX, op1X, op3X, op4X, useX, dX;
-<<<<<<< HEAD
-int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0 ;
-=======
-int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0 ;  
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
 String time[] = new String[10];
+String language = "ES", password = "  ", angle = "", distance = "", port = "", put = "";
+String op1, op2 = "Radar", op3, op4, disposeText, backText, hisText, lgText, useText, pText;
+boolean on = false, lgBoard = false, darkMode = false, pb = false, d1 = true, d2 = false, d3 = false, d4 = false, p1 = true, p2 = true, p3 = true, p4 = true;
+int count = 0, x = 0, y = 10, add, tab = 0, angleInt, distanceInt, index = 0, i = 0, a =0, dd1 = 0, dd2=0, dd3=0, dd4=0, c=0 ;
+int disposeX, backX, hisX, lgX, op1X, op3X, op4X, useX, dX, pX;
+float move, dPixels;
 
 //j
 int num1 = -1, num2 = -1, num3 = -1, num4 = -1;
@@ -60,6 +56,7 @@ void draw() {
     backText = "Back";
     hisText = "Last 10 alerts";
     useText = "How to use";
+    pText = "Password";
     break;
   case "ES":
     lgText = "Idioma";
@@ -70,6 +67,7 @@ void draw() {
     backText = "Atrás";
     hisText = "Últimas 10 alertas";
     useText = "Cómo usar";
+    pText = "Contraseña";
     break;
   }
   switch (tab) {
@@ -145,14 +143,9 @@ void draw() {
 }
 
 // Arduino
-<<<<<<< HEAD
 void serialEvent (Serial myPort) {// recibe los datos del puerto
   println(myPort);
   println(myPort.readStringUntil('.'));
-=======
-
-void serialEvent (Serial myPort) {// recibe los datos del puerto 
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
   port = myPort.readStringUntil('.');  // los lee solo hasta el punto, ya que es lo que se necesita (angulo y distancia)
   port = port.substring(0, port.length()-1);
   index = port.indexOf(",");// se guarda la posición de la coma, que es el caracter que separa al angulo y la distancia
@@ -163,32 +156,19 @@ void serialEvent (Serial myPort) {// recibe los datos del puerto
   if (distanceInt > 30) {
     player.pause();
   } else {
-<<<<<<< HEAD
-=======
-
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
     player.play();
     //time[i] = hour() + ":" + minute() + ":" + second();
     //text(time[i], width/2, height/2, 120, 30);
     //if (i == 9){
     //  i = 0;
     //}
-<<<<<<< HEAD
     player.play();
-=======
-
-    player.play();   
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
     time[i] = hour() + ":" + minute() + ":" + second();
     i = i +1;
     text(time[i], width/2, height/2, 120, 30);
     if (i == 9) {
       i = 0;
     }
-<<<<<<< HEAD
-=======
-
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
   }
 }
 
@@ -214,19 +194,7 @@ void audioRec() {
   }
 }
 
-<<<<<<< HEAD
 // 0. Menu
-
-
-
-// Menu
-=======
-// 0. Menu    
-
-
-
-// Menu    
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
 
 void mainMenu(String disposeText, String op1, String op2, String op3, String op4) {
   // Title
@@ -236,7 +204,7 @@ void mainMenu(String disposeText, String op1, String op2, String op3, String op4
   } else {
     fill(50, 63, 121);
   }
-  text("Owlt", 333, 25, 110, 40);
+  text("Eye-Force", 300, 25, 120, 40);
   // Date and Hour
   textSize(18);
   text(String.valueOf(day()) + "/" + String.valueOf(month()) + "/" + String.valueOf(year())
@@ -621,8 +589,15 @@ void passwordBoard() {
   rect(width - 150, 30, 115, 35, 10, 10, 10, 10);
   textSize(18);
   fill(50, 63, 121);
-  text("Password", width - 133, 42, 180, 30);
-  //rect(width - 150, 30, 115, 200, 10, 10, 10, 10);
+  switch (pText) {
+    case "Password":
+      pX = width - 133;
+      break;
+    case "Contraseña":
+      pX = width - 138;
+      break;
+  }
+  text(pText, pX, 42, 180, 30);
   if ((mouseX > width - 150) && (mouseX < width - 35) && (mouseY > 30) && (mouseY < 65) && (mousePressed)) {
     pb = true;
   } else if (!((mouseX > width - 150) && (mouseX < width - 35) && (mouseY > 30) && (mouseY < 230))) {
@@ -658,76 +633,9 @@ void passwordBoard() {
     text("8", width - 99, 160, 35, 40);
     text("9", width - 59, 160, 35, 40);
     text("0", width - 99, 200, 35, 40);
-<<<<<<< HEAD
 
     text(pass(num1) + pass(num2) + pass(num3) + pass(num4), width - 135, 55);
-=======
-    
-   
-    
-     
-     
-    
-    if (keyPressed){
-     
-      if (key == '1'){
-      a = 1;
-    }
-    else if (key == '2'){
-      a = 2;
-    }
-    else if (key == '3'){
-      a= 3;
-    }else if (key == '4'){
-      a = 4;
-    }else if (key == '5'){
-      a = 5;}
-    else if (key == '6'){
-      a = 6;
-    }else if (key == '7'){
-      a = 7;
-    }else if (key == '8'){
-      a = 8;
-    }else if (key == '9'){
-      a= 9;
-    }else if (key == '0'){
-      a= 0;
-    }}
-    
-    
-    if (d1){
-    dd1 = a;
-  
   }
-    else if (a!=dd1){
-    dd2 = a;
->>>>>>> aca242ce9b834fa38ea44eeac5571747ac8799b2
-  }
-  else if (a!=dd1&& a!=dd2){
-    dd3 = a;
-  }
-  else if (a!=dd1&& a!=dd2&& a!=dd3){
-    dd4 = a;
-
-  }
-     String c1 = String.valueOf(dd1);
-     String c2 = String.valueOf(dd2);
-     String c3 = String.valueOf(dd3);
-     String c4 = String.valueOf(dd4);
-     if (dd1!=0){
-      String ca = c1+c2+c3+c4;
-      int cai = Integer.parseInt(ca);
-       text(cai, width - 135, 55);
-       
-    }
-     
-     
-     
-       
-    
-   
-  }
-  
 }
 
 
@@ -777,12 +685,12 @@ void backButton(String backText) {
   fill(0);
   textSize(16);
   switch (backText) {
-  case "Atrás":
-    backX = 52;
-    break;
-  case "Back":
-    backX = 54;
-    break;
+    case "Atrás":
+      backX = 52;
+      break;
+    case "Back":
+      backX = 54;
+      break;
   }
   text(backText, backX, 40, 70, 20);
   // Changes
